@@ -72,7 +72,7 @@ y_plot_limit = 20;
 PP_OptimalWindow_ScatterPlot(min_win,dev,devControl,y_plot_limit);
 
 %% Cross Correlograms of Pairs
-[bin_win_max,~] = size(dev);
+ [~, bin_win_max] = size(position_coords);
 %load spikes, and pairs to run
 PP_crosscorr(identified_pairs, bin_win_max,pairsToRun, spikes)
 
