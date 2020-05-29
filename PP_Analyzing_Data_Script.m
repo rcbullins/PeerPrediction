@@ -34,10 +34,10 @@ cd(data_path)
 
 %% Assembly StrengthOnly 
 
-[ratio_strength, dev_min, weak_pairs, strong_pairs] = PP_AssemblyStrength (dev, devControl, data_folder);
+[ratio_strength, dev_min, dev_min_smoothed, weak_pairs, strong_pairs] = PP_AssemblyStrength (dev, devControl, data_folder);
 
 %% Deviance Graph 
-
+%Note: dev_min can be dev_min or dev_min_smoothed (interchangeable)
 [min_win_pairs, min_win, identified_pairs] = PP_DevianceGraphs(dev, devControl, dev_min, ratio_strength, weak_pairs, strong_pairs);
 
 %% Histogram of Optimal Time Windows : ALL

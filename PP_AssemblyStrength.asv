@@ -1,4 +1,4 @@
-function [ratio_strength, dev_min,dev_min_smoothed, iweak_pair, istrong_pair] = PP_AssemblyStrength (dev, devControl, data_folder)
+function [ratio_strength, dev_min, iweak_pair, istrong_pair] = PP_AssemblyStrength (dev, devControl, data_folder)
 %Purpose: To find assembly strength of each cell pair, see how well each
 %         pair is more or less correlated to one another
 
@@ -11,13 +11,12 @@ function [ratio_strength, dev_min,dev_min_smoothed, iweak_pair, istrong_pair] = 
 
 [~,number_of_pairs] = size(dev);
 dev_min = zeros(1, number_of_pairs);
-dev_min_smoothed = zeros(1, number_of_pairs);
 devControl_min = zeros(1, number_of_pairs);
 ratio_strength = zeros(1, number_of_pairs);
 dev_smoothed = smoothdata(dev, 2, 'gaussian')
 
 for ipair = 1:number_of_pairs
-    dev_min_smoothed(ipair) = min(dev_smoothed(:,ipair));
+    dev_min
     dev_min(ipair) = min(dev(:,ipair));
     devControl_min(ipair) = min(mean(devControl(:,ipair,:),3)); % or mean across 3D--> mean(devControl,3);
     ratio_strength(ipair) = (dev_min(ipair) - mean(dev(:,ipair))) ./ ...
