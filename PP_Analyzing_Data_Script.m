@@ -1,4 +1,4 @@
-%testing 123 testing :) pull test
+%testing 123 testing :) push test
 
 %Script for Analyzing PP Result Data
 
