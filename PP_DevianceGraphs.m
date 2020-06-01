@@ -1,4 +1,4 @@
-function [] = PP_DevianceGraphs(dev, devControl, dev_min, ratio_strength, choice)
+function [] = PP_DevianceGraphs(dev, devControl, dev_min, ratio_strength, graphPairs)
 %Purpose: To create a deviance graph per cell pair. Each graph will have
 %         the deviance between the cell pair in black, and the control
 %         deviance in red. Each graph will also denote the assembly
@@ -18,8 +18,8 @@ function [] = PP_DevianceGraphs(dev, devControl, dev_min, ratio_strength, choice
 
 
 %% Graphing 
-[~, number_of_pairs] = size(choice.graphPairs);
-pairs_to_graph = choice.graphPairs;
+[~, number_of_pairs] = size(graphPairs);
+pairs_to_graph = graphPairs;
 
 min_win_pairs = zeros(1,number_of_pairs);
 % Make a graph for each cell pair
@@ -54,4 +54,3 @@ for ipair = 1:number_of_pairs
     end
   
 end
-end 

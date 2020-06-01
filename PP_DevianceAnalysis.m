@@ -1,4 +1,4 @@
-function [pairs_for_analysis, min_win_total, min_win_pairs] = PP_DevianceAnalysis (dev,dev_min, choice, iweak_pairs, istrong_pairs)
+function [pairs_for_analysis, min_win_total, min_win_pairs] = PP_DevianceAnalysis (dev,dev_min, analysisPairs, iweak_pairs, istrong_pairs)
 %Purpose: To find the minimum optimal time window for all pairs and
 %         to also find the minimum optimal time window for a specified
 %         subset of pairs.
@@ -25,20 +25,23 @@ end
 
 
 %% Analysis: get min win for analysis specified
-if isstring(choice.analysisParis == 1)
-    if strcmp(choice.analysisPairs, 'WeakPairs')
+string_ans = isstring(analysisPairs);
+if string_ans == true
+    disp('hi')
+    if strcmp(analysisPairs, 'WeakPairs')
+        disp('hello')
         pairs_for_analysis = iweak_pairs;
-    elseif strcmp(choice.analysisPairs, 'StrongPairs')
+    elseif strcmp(analysisPairs, 'StrongPairs')
         pairs_for_analysis = istrong_pairs;
     elseif strmp(choice.analysisPairs, 'All')
         pairs_for_analysis = (1:number_of_pairs_need_minWin);
     end
-elseif isstring(choice.analysisPairs == 0)
-   pairs_for_analysis = choice.analysisPairs; 
+elseif string_ans == false
+   pairs_for_analysis = analysisPairs; 
 end
 
 %find min win for specified pairs
-min_win_pairs = zeros(1, length(pairs_for_analyis));
+min_win_pairs = zeros(1, length(pairs_for_analysis));
 for ipair = 1:length(pairs_for_analysis)
    min_win_pairs(ipair) = find(dev(:,pairs_for_analysis(ipair)) == dev_min(pairs_for_analysis(ipair)));
 end
