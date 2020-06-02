@@ -14,7 +14,10 @@
 % Created: 3/23/20 by Reagan Bullins
 % Edited: 6/01/20 by Reagan Bullins          
 
-%CHANGE paths and data names if necessary for computer
+% NOTE: Change paths to adapt to your computer
+%       Go to 'EXTRA Specifications' Section to specify certain pairs you
+%       want to graph or subsets of data you want to look at.
+
 %% Define Paths
 %Folder with result data :NORMAL OR POISSON
     data_folder = 'pp_batch' 
@@ -22,20 +25,18 @@
 %Folder with spike information
     spike_info_folder = 'spike_info'
 %paths with result data
-    basepath = ('C:\Users\rcbul\Documents\English Lab\');
+    basepath = ('C:\Users\rcbul\Documents\English Lab\PP_RSC_Data\');
     addpath(genpath(basepath))
-    data_path = [basepath 'PP_RSC_Data\' data_folder]
-    spike_info_path = [basepath 'PP_RSC_Data\' spike_info_folder]
+    data_path = [basepath data_folder]
+    spike_info_path = [basepath spike_info_folder]
 %% EXTRA Specifications
-    %Note when making specifications, all dat
-    % For deviance graping do you want to graph all pairs or specify?
-        choice.graphPairs = 'All'
-        %choice.graphPairs = [2,4,5];
-    % For data analysis do you want to analyze all pairs or a subset?
-        choice.analysisPairs = 'All'
-        %choice.analysisPairs = [2,4,5];
-        %choice.analysisPairs = 'WeakPairs'
-        %choice.analysisPairs = 'StrongPairs'
+  % Analyze all pairs or a subset?
+        %choice_analysisPairs = "All"
+        %choice_analysisPairs = [2,4,5];
+        choice_analysisPairs = "WeakPairs"
+        %choice_analysisPairs = "StrongPairs"
+  % Graping (Deviance and Cross Corr): Which pairs?
+        choice_graphPairs = [7];
         
 %% Load and Concatenate Data
 cd(data_path)
@@ -46,17 +47,20 @@ cd(data_path)
 
 [ratio_strength, dev_min, dev_min_smoothed, weak_pairs, strong_pairs] = PP_AssemblyStrength (dev, devControl, data_folder);
 
+%% Deviance Analysis 
+[pairs_for_analysis, min_win_total, min_win_pairs] = PP_DevianceAnalysis (dev,dev_min, choice_analysisPairs, weak_pairs, strong_pairs);
+
 %% Deviance Graph 
 %Note: dev_min can be dev_min or dev_min_smoothed (interchangeable)
-[min_win_pairs, min_win, identified_pairs] = PP_DevianceGraphs(dev, devControl, dev_min, ratio_strength, weak_pairs, strong_pairs, choice);
+PP_DevianceGraphs(dev, devControl, dev_min, ratio_strength, choice_graphPairs);
 
 %% Histogram of Optimal Time Windows : ALL
 bin_win_count = 1; %binned within 3 ms time windows -- CAN adjust
 [bin_win_max,~] = size(dev); % CAN adjust 
 
-[optimal_window] = PP_TimeWindow_Histogram (bin_win_count, bin_win_max, min_win); %optimal window is median
+[optimal_window] = PP_TimeWindow_Histogram (bin_win_count, bin_win_max, min_win_total); %optimal window is median
 
-%% Histogram of Optimal Time Windows: SPECIFIED by deviance graph function
+%% Histogram of Optimal Time Windows: Analysis Specifications
 bin_win_count = 1; %binned within 3 ms time windows -- CAN adjust
 [bin_win_max,~] = size(dev); % CAN adjust 
 
@@ -64,30 +68,35 @@ bin_win_count = 1; %binned within 3 ms time windows -- CAN adjust
 
 %% Histogram of Assembly Strength
 
-figure
-bin_win_count_ratio = 2;
-nbins = (1:bin_win_count_ratio:max(ratio_strength))
-histogram(ratio_strength, nbins)
-[counts_per_win, edges] = histcounts(ratio_strength, nbins)
-title('Assembly Strength')
-xlabel('Assembly Strength')
-ylabel('Frequency')
-hold on
-xline(median(ratio_strength), 'k','LineWidth',1.5)
-txt2 = (['Median Assembly Strength = ' num2str(median(ratio_strength))]);
-text(median(ratio_strength) + 5, max(counts_per_win)- 1, txt2)
+bin_interval = 2; 
+PP_AssemblyStrength_Hist (ratio_strength, bin_interval);
 
-%% Scatterplot of Optimal Time Windows
+%% Scatterplot of Optimal Time Windows: All
+
 y_plot_limit = 20;
 PP_OptimalWindow_ScatterPlot(min_win,dev,devControl,y_plot_limit);
 
-%% Cross Correlograms of Pairs
- [~, bin_win_max] = size(position_coords);
+%% Cross Correlograms of Pairs :Graph specifications
+ cd(basepath)
+ load('pairsToRun.mat')
+ cd(spike_info_path)
+ load('m115_191203_152410_2 peerPrediction_inputs.mat')
+ load('m115_191203_152410_2.spikes.cellinfo.mat')
+ 
+%Get length of recording in ms
+[~, bin_win_max] = size(position_coords);
+clear position_coords
+clear phase_rad
+clear extraPredictors
+clear velocities
+clear binned_spikes
+
 %load spikes, and pairs to run
-PP_crosscorr(identified_pairs, bin_win_max,pairsToRun, spikes)
+PP_crosscorr(choice_graphPairs, bin_win_max ,pairsToRun, spikes)
 
-%% Rastor for Actual and Predictor
-
+%% Rastor for Actual and Predictor: Graph specifications
+cd(basepath)
+ load('pairsToRun.mat')
 [smoothedTrains, pair_idx] = PP_Raster_SmoothedTrains(spike_info_path, pairsToRun)
 
 %% Place Field 
