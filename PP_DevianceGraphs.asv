@@ -18,9 +18,6 @@ function [] = PP_DevianceGraphs(dev, devControl, dev_min, ratio_strength, graphP
 
 
 %% Graphing 
-%dev_smoothed = smoothdata(dev, 2, 'gaussian')
-time = (0:150)
-dev_smoothed = ployfit(time, dev)
 
 [~, number_of_pairs] = size(graphPairs);
 pairs_to_graph = graphPairs;
@@ -39,7 +36,8 @@ for ipair = 1:number_of_pairs
         time = (0:150)
         plot(time, dev(:, pairs_to_graph(ipair)),'b')
         hold on
-        plot(time, dev_smoothed(:, pairs_to_graph(ipair)),'k');
+        dev_smoothed_coeff = polyfit(time, dev(:, pairs_to_graph(ipair))',150)
+        plot(time, dev_smoothed_coeff,'k');
         %Find the min dev 
         min_win_pairs(ipair) = find(dev(:,pairs_to_graph(ipair)) == dev_min(pairs_to_graph(ipair)));
         
@@ -49,7 +47,10 @@ for ipair = 1:number_of_pairs
          
             %average over all control trials in 3rd deminsion and plot
             average_control = mean(devControl,3);
-            plot(time, average_control(:,pairs_to_graph(ipair)), 'r')
+            control_smoothed = polyfit(time, average_control(:, pairs_to_graph(ipair)),2);
+            plot(time, average_control(:,pairs_to_graph(ipair)), 'r');
+            plot(time, control_smoothed(:, pairs_to_graph(ipair)), 'g');
+            
             %Label Graph Axis
             xlabel('Time (ms)')
             ylabel('Deviance')

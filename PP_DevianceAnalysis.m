@@ -27,13 +27,11 @@ end
 %% Analysis: get min win for analysis specified
 string_ans = isstring(analysisPairs);
 if string_ans == true
-    disp('hi')
     if strcmp(analysisPairs, 'WeakPairs')
-        disp('hello')
         pairs_for_analysis = iweak_pairs;
     elseif strcmp(analysisPairs, 'StrongPairs')
         pairs_for_analysis = istrong_pairs;
-    elseif strmp(choice.analysisPairs, 'All')
+    elseif strcmp(analysisPairs, 'All')
         pairs_for_analysis = (1:number_of_pairs_need_minWin);
     end
 elseif string_ans == false

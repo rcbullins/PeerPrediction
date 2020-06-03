@@ -20,24 +20,52 @@
 
 %% Define Paths
 %Folder with result data :NORMAL OR POISSON
-    data_folder = 'pp_batch' 
-    %data_folder = 'pp_poisson'
+    data_folder = 'pp_batch' ;
+    %data_folder = 'pp_poisson';
 %Folder with spike information
-    spike_info_folder = 'spike_info'
+    spike_info_folder = 'spike_info';
 %paths with result data
-    basepath = ('C:\Users\rcbul\Documents\English Lab\PP_RSC_Data\');
-    addpath(genpath(basepath))
-    data_path = [basepath data_folder]
-    spike_info_path = [basepath spike_info_folder]
+    basepath = ('C:\Users\rcbul\Documents\English Lab\');
+    addpath(genpath(basepath));
+    data_path = [basepath 'PP_RSC_Data\' data_folder];
+    spike_info_path = [basepath 'PP_RSC_Data\' spike_info_folder];
 %% EXTRA Specifications
   % Analyze all pairs or a subset?
-        %choice_analysisPairs = "All"
+        choice_analysisPairs = "All";
         %choice_analysisPairs = [2,4,5];
-        choice_analysisPairs = "WeakPairs"
-        %choice_analysisPairs = "StrongPairs"
-  % Graping (Deviance and Cross Corr): Which pairs?
-        choice_graphPairs = [7];
-        
+        %choice_analysisPairs = "WeakPairs";
+        %choice_analysisPairs = "StrongPairs";
+  % Graping (Deviance, Cross Corr, Rastor): Which pairs?
+        choice_graphPairs = [1,51,185];
+  % Smooth Data (1) or Raw (0)?
+        choice_smooth = 1;    
+        %choice_smooth = 0;
+  
+%% Graphing Defaults
+
+set(groot, ...
+'DefaultFigureColor', 'w', ...
+'DefaultAxesLineWidth', 0.5, ...
+'DefaultAxesXColor', 'k', ...
+'DefaultAxesYColor', 'k', ...
+'DefaultAxesFontUnits', 'points', ...
+'DefaultAxesFontSize', 12, ...
+'DefaultAxesFontName', 'Arial', ...
+'DefaultLineLineWidth', 1.25, ...
+'DefaultTextFontUnits', 'Points', ...
+'DefaultTextFontSize', 12, ...
+'DefaultTextFontName', 'Arial', ...
+'DefaultAxesBox', 'off', ...
+'DefaultAxesTickLength', [0.02 0.025]);
+ 
+% set the tickdirs to go out - need this specific order
+set(groot, 'DefaultAxesTickDir', 'out');
+set(groot, 'DefaultAxesTickDirMode', 'manual');
+
+
+% To restore a property to its original MATLAB® default, use the 'remove' keyword.
+% set(groot,'DefaultFigureColormap','remove')
+
 %% Load and Concatenate Data
 cd(data_path)
 
@@ -45,13 +73,15 @@ cd(data_path)
 
 %% Assembly StrengthOnly 
 
-[ratio_strength, dev_min, dev_min_smoothed, weak_pairs, strong_pairs] = PP_AssemblyStrength (dev, devControl, data_folder);
+[dev, ratio_strength, dev_min, weak_pairs, strong_pairs] = PP_AssemblyStrength (dev, devControl, data_folder, choice_smooth);
 
 %% Deviance Analysis 
-[pairs_for_analysis, min_win_total, min_win_pairs] = PP_DevianceAnalysis (dev,dev_min, choice_analysisPairs, weak_pairs, strong_pairs);
+
+[pairs_for_analysis, min_win_total, min_win_pairs] = PP_DevianceAnalysis (dev,dev_min choice_analysisPairs, weak_pairs, strong_pairs);
 
 %% Deviance Graph 
-%Note: dev_min can be dev_min or dev_min_smoothed (interchangeable)
+
+figure
 PP_DevianceGraphs(dev, devControl, dev_min, ratio_strength, choice_graphPairs);
 
 %% Histogram of Optimal Time Windows : ALL
@@ -77,27 +107,12 @@ y_plot_limit = 20;
 PP_OptimalWindow_ScatterPlot(min_win,dev,devControl,y_plot_limit);
 
 %% Cross Correlograms of Pairs :Graph specifications
- cd(basepath)
- load('pairsToRun.mat')
- cd(spike_info_path)
- load('m115_191203_152410_2 peerPrediction_inputs.mat')
- load('m115_191203_152410_2.spikes.cellinfo.mat')
- 
-%Get length of recording in ms
-[~, bin_win_max] = size(position_coords);
-clear position_coords
-clear phase_rad
-clear extraPredictors
-clear velocities
-clear binned_spikes
-
-%load spikes, and pairs to run
-PP_crosscorr(choice_graphPairs, bin_win_max ,pairsToRun, spikes)
+bin_interval = 50; %size of bins in ms
+PP_crosscorr(choice_graphPairs, bin_interval,basepath, spike_info_path)
 
 %% Rastor for Actual and Predictor: Graph specifications
-cd(basepath)
- load('pairsToRun.mat')
-[smoothedTrains, pair_idx] = PP_Raster_SmoothedTrains(spike_info_path, pairsToRun)
+
+[smoothedTrains, pair_idx] = PP_Raster_SmoothedTrains(choice_graphPairs, spike_info_path, basepath)
 
 %% Place Field 
 

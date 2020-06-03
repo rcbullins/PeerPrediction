@@ -25,18 +25,21 @@
 %Folder with spike information
     spike_info_folder = 'spike_info';
 %paths with result data
-    basepath = ('C:\Users\rcbul\Documents\English Lab\PP_RSC_Data\');
+    basepath = ('C:\Users\rcbul\Documents\English Lab\');
     addpath(genpath(basepath));
-    data_path = [basepath data_folder];
-    spike_info_path = [basepath spike_info_folder];
+    data_path = [basepath 'PP_RSC_Data\' data_folder];
+    spike_info_path = [basepath 'PP_RSC_Data\' spike_info_folder];
 %% EXTRA Specifications
   % Analyze all pairs or a subset?
-        %choice_analysisPairs = "All";
+        choice_analysisPairs = "All";
         %choice_analysisPairs = [2,4,5];
-        choice_analysisPairs = "WeakPairs"
-        %choice_analysisPairs = "StrongPairs"
+        %choice_analysisPairs = "WeakPairs";
+        %choice_analysisPairs = "StrongPairs";
   % Graping (Deviance, Cross Corr, Rastor): Which pairs?
-        choice_graphPairs = [2,4,7];
+        choice_graphPairs = [1,51,185];
+  % Smooth Data (1) or Raw (0)?
+        choice_smooth = 1;    
+        %choice_smooth = 0;
   
 %% Graphing Defaults
 
@@ -48,7 +51,7 @@ set(groot, ...
 'DefaultAxesFontUnits', 'points', ...
 'DefaultAxesFontSize', 12, ...
 'DefaultAxesFontName', 'Arial', ...
-'DefaultLineLineWidth', 1, ...
+'DefaultLineLineWidth', 1.25, ...
 'DefaultTextFontUnits', 'Points', ...
 'DefaultTextFontSize', 12, ...
 'DefaultTextFontName', 'Arial', ...
@@ -70,13 +73,15 @@ cd(data_path)
 
 %% Assembly StrengthOnly 
 
-[ratio_strength, dev_min, dev_min_smoothed, weak_pairs, strong_pairs] = PP_AssemblyStrength (dev, devControl, data_folder);
+[dev, ratio_strength, dev_min, weak_pairs, strong_pairs] = PP_AssemblyStrength (dev, devControl, data_folder, choice_smooth);
 
 %% Deviance Analysis 
-[pairs_for_analysis, min_win_total, min_win_pairs] = PP_DevianceAnalysis (dev,dev_min, choice_analysisPairs, weak_pairs, strong_pairs);
+
+[pairs_for_analysis, min_win_total, min_win_pairs] = PP_DevianceAnalysis (dev,dev_min choice_analysisPairs, weak_pairs, strong_pairs);
 
 %% Deviance Graph 
-%Note: dev_min can be dev_min or dev_min_smoothed (interchangeable)
+
+figure
 PP_DevianceGraphs(dev, devControl, dev_min, ratio_strength, choice_graphPairs);
 
 %% Histogram of Optimal Time Windows : ALL
