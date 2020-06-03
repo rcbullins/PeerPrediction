@@ -14,7 +14,8 @@ function [pairs_for_analysis, min_win_total, min_win_pairs] = PP_DevianceAnalysi
 %         min_win_total (minimum window for all pairs)
 %         pairs_for_analysis (pairs specified by choice, the index)
 
-%Created: 6/01/20 by Reagan Bullins
+%Created: 06/01/20 by Reagan Bullins
+
 %% Analysis: get min win for all windows
 [~, number_of_pairs_need_minWin] = size(dev);
 min_win_total = zeros(1, number_of_pairs_need_minWin);

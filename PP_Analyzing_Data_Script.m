@@ -12,11 +12,14 @@
 %         ScatterPlot of Error vs Optimal Time Window
 
 % Created: 3/23/20 by Reagan Bullins
-% Edited: 6/01/20 by Reagan Bullins          
+% Updated: 6/01/20 by Reagan Bullins          
 
 % NOTE: Change paths to adapt to your computer
-%       Go to 'EXTRA Specifications' Section to specify certain pairs you
-%       want to graph or subsets of data you want to look at.
+%       Go to 'EXTRA Specifications' Section to specify ... 
+%           subset of data to analyze (or all)
+%           pairs you want to graph (or all- but that's a lot)
+%           smoothing data or not
+
 
 %% Define Paths
 %Folder with result data :NORMAL OR POISSON
@@ -27,6 +30,7 @@
 %paths with result data
     basepath = ('C:\Users\rcbul\Documents\English Lab\');
     addpath(genpath(basepath));
+    all_data_path = [basepath 'PP_RSC_Data\'];
     data_path = [basepath 'PP_RSC_Data\' data_folder];
     spike_info_path = [basepath 'PP_RSC_Data\' spike_info_folder];
 %% EXTRA Specifications
@@ -81,7 +85,6 @@ cd(data_path)
 
 %% Deviance Graph 
 
-figure
 PP_DevianceGraphs(dev, devControl, dev_min, ratio_strength, choice_graphPairs);
 
 %% Histogram of Optimal Time Windows : ALL
@@ -107,8 +110,9 @@ y_plot_limit = 20;
 PP_OptimalWindow_ScatterPlot(min_win,dev,devControl,y_plot_limit);
 
 %% Cross Correlograms of Pairs :Graph specifications
-bin_interval = 50; %size of bins in ms
-PP_crosscorr(choice_graphPairs, bin_interval,basepath, spike_info_path)
+
+bin_size = .01; %also default is .01
+PP_crosscorr(bin_size, choice_graphPairs,all_data_path, spike_info_path)
 
 %% Rastor for Actual and Predictor: Graph specifications
 

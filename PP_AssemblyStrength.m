@@ -10,7 +10,8 @@ function [dev, ratio_strength, dev_min, iweak_pair, istrong_pair] = PP_AssemblyS
 %         strong_pairs (assemb strength)
 %         dev_smoothed
 
-%Created: 3/30/20 by Reagan Bullins
+%Created: 03/30/20 by Reagan Bullins
+%Updated: 06/03/20 by Reagan Bullins
 if choice_smooth = 0
     [~,number_of_pairs] = size(dev);
     dev_min = zeros(1, number_of_pairs);

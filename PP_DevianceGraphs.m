@@ -13,8 +13,8 @@ function [] = PP_DevianceGraphs(dev, devControl, dev_min, ratio_strength, graphP
 
 %Outputs:  deviance figures for specified cell pairs
 
-%Created: 3/25/20 by Reagan Bullins
-%Updated: 6/01/20 by Reagan Bullins
+%Created: 03/25/20 by Reagan Bullins
+%Updated: 06/01/20 by Reagan Bullins
 
 
 %% Graphing 
