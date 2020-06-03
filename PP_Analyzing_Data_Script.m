@@ -115,8 +115,14 @@ bin_size = .01; %also default is .01
 PP_crosscorr(bin_size, choice_graphPairs,all_data_path, spike_info_path)
 
 %% Rastor for Actual and Predictor: Graph specifications
+cd(spike_info_path)
+load('m115_191203_152410_2 peerPrediction_inputs.mat')
+load('m115_191203_152410_2.spikes.cellinfo.mat')
 
-[smoothedTrains, pair_idx] = PP_Raster_SmoothedTrains(choice_graphPairs, spike_info_path, basepath)
+cd(all_data_path)
+load('pairsToRun.mat')
+
+[smoothedTrains, pair_idx] = PP_Raster_SmoothedTrains(choice_graphPairs, binned_spikes, pairsToRun, spikes)
 
 %% Place Field 
 
