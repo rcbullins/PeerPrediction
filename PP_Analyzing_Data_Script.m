@@ -40,7 +40,7 @@
         %choice_analysisPairs = "WeakPairs";
         %choice_analysisPairs = "StrongPairs";
   % Graping (Deviance, Cross Corr, Rastor): Which pairs?
-        choice_graphPairs = [1,51,185];
+        choice_graphPairs = [1,51, 14];
   % Smooth Data (1) or Raw (0)?
         choice_smooth = 1;    
         %choice_smooth = 0;
@@ -55,7 +55,7 @@ set(groot, ...
 'DefaultAxesFontUnits', 'points', ...
 'DefaultAxesFontSize', 12, ...
 'DefaultAxesFontName', 'Arial', ...
-'DefaultLineLineWidth', 1.25, ...
+'DefaultLineLineWidth', 1, ...
 'DefaultTextFontUnits', 'Points', ...
 'DefaultTextFontSize', 12, ...
 'DefaultTextFontName', 'Arial', ...
@@ -77,7 +77,7 @@ cd(data_path)
 
 %% Assembly StrengthOnly 
 
-[dev, ratio_strength, dev_min, weak_pairs, strong_pairs] = PP_AssemblyStrength (dev, devControl, data_folder, choice_smooth);
+[dev_smoothed, ratio_strength, dev_min, weak_pairs, strong_pairs] = PP_AssemblyStrength (dev, devControl, data_folder, choice_smooth);
 
 %% Deviance Analysis 
 
@@ -85,7 +85,7 @@ cd(data_path)
 
 %% Deviance Graph 
 
-PP_DevianceGraphs(dev, devControl, dev_min, ratio_strength, choice_graphPairs);
+PP_DevianceGraphs(dev, dev_smoothed, devControl, dev_min, ratio_strength, choice_graphPairs);
 
 %% Histogram of Optimal Time Windows : ALL
 bin_win_count = 1; %binned within 3 ms time windows -- CAN adjust
@@ -111,7 +111,7 @@ PP_OptimalWindow_ScatterPlot(min_win,dev,devControl,y_plot_limit);
 
 %% Cross Correlograms of Pairs :Graph specifications
 
-bin_size = .01; %also default is .01
+bin_size = .03; %also default is .01
 PP_crosscorr(bin_size, choice_graphPairs,all_data_path, spike_info_path)
 
 %% Rastor for Actual and Predictor: Graph specifications
@@ -122,7 +122,13 @@ load('m115_191203_152410_2.spikes.cellinfo.mat')
 cd(all_data_path)
 load('pairsToRun.mat')
 
-[smoothedTrains, pair_idx] = PP_Raster_SmoothedTrains(choice_graphPairs, binned_spikes, pairsToRun, spikes)
+clear velocities
+clear extraPredictors
+clear position_coords
+
+choice_sec = 105; %which second you want to plot
+
+PP_Raster_SmoothedTrains(choice_graphPairs, choice_sec, binned_spikes, pairsToRun, spikes)
 
 %% Place Field 
 

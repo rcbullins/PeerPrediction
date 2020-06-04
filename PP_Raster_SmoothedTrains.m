@@ -1,4 +1,4 @@
-function [smoothedTrains, pair_idx] = PP_Raster_SmoothedTrains(choice_graphPairs, binned_spikes, pairsToRun, spikes)
+function [] = PP_Raster_SmoothedTrains(choice_graphPairs,choice_sec, binned_spikes, pairsToRun, spikes)
 %Purpose: Create cross correlograms for specified pairs.
 
 %Dependencies: Buzcode
@@ -15,7 +15,7 @@ function [smoothedTrains, pair_idx] = PP_Raster_SmoothedTrains(choice_graphPairs
 %           Third-sixth Raster: Cell 2 Spikes smoothed over varying windows
 %        smoothedTrains: smoothed spike times of cell 2 (only specified
 %           graphing windows, or you can change code to run all)
-%        pairIdx: index of pair in dev
+%Options: win_num: windows to smooth data over, you can change this
 
 %Created: 06/03/20 by Reagan Bullins
 
@@ -24,7 +24,8 @@ function [smoothedTrains, pair_idx] = PP_Raster_SmoothedTrains(choice_graphPairs
 spikeTimes = binned_spikes(:,1,:); %FOR NOW with only ONE Predictor
 %winRange = (0:150); %if want all windows smoothed over, & change
 %   win_num(win) to win 
-win_num = [25 50] % 100 150]; %the ms windows we will look at FOR SPEED
+win_num = [25 50 100 150]; %the ms windows we will look at FOR SPEED
+
 for ipair = 1:length(choice_graphPairs)
     figure
     %identify which number cells are being compaired in this pair
@@ -39,68 +40,69 @@ for ipair = 1:length(choice_graphPairs)
             for time_win = 1:size(spikeTimes, 3)%for length of whole recording
                 if time_win > win_num(win) & time_win + win_num(win) < size(spikeTimes,3)
                      if win_num(win) == 0 
-                        smoothedTrains(:,time_win)= spikeTimes(cell_2,:,time_win);
+                        smoothedTrains(win,time_win)= spikeTimes(cell_2,:,time_win);
                      elseif win_num(win) > 0
-                        smoothedTrains(:,time_win)=  sum(spikeTimes(cell_2,:,(time_win - win_num(win):time_win + win_num(win)))/(win_num(win)*2),3);
+                        smoothedTrains(win,time_win)=  sum(spikeTimes(cell_2,:,(time_win - win_num(win):time_win + win_num(win)))/(win_num(win)*2),3);
                      end
                 end
                     if time_win <= win_num(win)
                         j = time_win - 1;
-                        smoothedTrains(:,time_win)=  sum(spikeTimes(cell_2,:,(time_win - j:time_win + win_num(win)))/(length(1:time_win + win_num(win))),3);
+                        smoothedTrains(win,time_win)=  sum(spikeTimes(cell_2,:,(time_win - j:time_win + win_num(win)))/(length(1:time_win + win_num(win))),3);
                     end
                     if time_win + win_num(win) >= size(spikeTimes,3)
                         j = size(spikeTimes,3) - time_win;
-                        smoothedTrains(:,time_win)=  sum(spikeTimes(cell_2,:,(time_win - win_num(win):time_win + j))/(length(time_win - win_num(win):size(spikeTimes,3))),3);
+                        smoothedTrains(win,time_win)=  sum(spikeTimes(cell_2,:,(time_win - win_num(win):time_win + j))/(length(time_win - win_num(win):size(spikeTimes,3))),3);
                     end 
             end
         end
-%================================HERE
-    %Initiate Rastor Plot
-%plot the target cell -- ACTUAL cell
-        subplot(6,1,1)
-        plot(actual_cell, ones(length(actual_cell)),'.r')
+%================================
+%Graphing
+    %plot ACTUAL cell
+        subplot(6,1,1);
+        title('Actual Cell');
+        %find the index points of the second you want to graph
+        actual_x = find(actual_cell >= choice_sec & actual_cell < choice_sec+1);
+        for idx_x = 1:length(actual_x)
+            xline(actual_cell(actual_x(idx_x)));
+        end
+         %plot(actual_cell(actual_x),ones(length(actual_x),'.r'));
+         xlim([choice_sec choice_sec+1]);
+         set(gca,'XTick',[]);
+         set(gca,'YTick',[]);
+    %plot PREDICT cell   
         subplot(6,1,2)
-        plot(predict_cell, ones(length(predict_cell)),'.r')
-        
-        subplot(6,1,3)
-       % plot(smoothedTrains(:, 25),ones(length(smoothedTrains(:)),'.r')
+        title('Predictor Cell')
+        predict_x = find(predict_cell >= choice_sec & predict_cell < choice_sec+1);
+        for idx_x = 1:length(predict_x)
+            xline(predict_cell(predict_x(idx_x)));
+        end
+        %plot(predict_cell(predict_x),ones(length(predict_x),'.r'));
+        xlim([choice_sec choice_sec+1]);
+        set(gca,'XTick',[]);
+        set(gca,'YTick',[]);
+    %plot Smoothing windows
+        link_ax = zeros(length(win_num));
+        for idx_win = 1:length(win_num)
+            link_ax(idx_win) = subplot(6,1,idx_win+2);
+            plot(smoothedTrains(idx_win, choice_sec*1000:(choice_sec+1)*1000));
+            hold on
+             sgtitle(['Actual vs Predictor Spike Trains: Cell ' num2str(cell_1) ' vs ' num2str(cell_2)']);
+            title(['Smoothed Predictor ' num2str(win_num(idx_win)) 'ms'])
+            xlim([0 1000])
+            if idx_win < length(win_num)
+                set(gca,'XTick',[]);
+            elseif idx_win == length(win_num)
+                 xticks([0 500 1000]);
+                 xticklabels({[choice_sec, choice_sec+.5, choice_sec+1]});
+                  xlabel('Time (s)');
+                   ylabel('Probability');
+            end
+          
+         end
+    %Graph specs
+        sgtitle(['Actual vs Predictor Spike Trains: Cell ' num2str(cell_1) ' vs ' num2str(cell_2)']);
       
-        subplot(6,1,4)
-        plot(smoothedTrains(:, 50),'.r')
-       
-        subplot(6,1,5)
-        plot(smoothedTrains(:, 100)'.r')
-        
-        subplot(6,1,6)
-        plot(smoothedTrains(:, 150),'.r')
-        
-% ===================================Old        
-% %plot compairson cell    
-%     subplot(6,1,2)
-%      for ispike = 1:length(predict_cell)
-%         plot(predict_cell(ispike), '.')
-%         hold on
-%      end
-% %plot smoothed train at 25 ms
-%     x = (0:150)
-%     
-%     for ispike = 1:length(smoothedTrains)
-%         if ispike == 10
-%             disp('well hi')
-%         end
-%         subplot(6,1,3)
-%         plot(x, smoothedTrains(ispike, 25),'.')
-%         hold on
-%         subplot(6,1,4)
-%         plot(smoothedTrains(ispike, 50),'.')
-%         hold on
-%         subplot(6,1,5)
-%         plot(smoothedTrains(ispike, 100)'.')
-%         hold on
-%         subplot(6,1,6)
-%         plot(smoothedTrains(ispike, 150),'.')
-%         hold on
-%     end
-
+        hold off
+end
     disp('Yay Science!')
 end

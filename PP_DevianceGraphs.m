@@ -1,4 +1,4 @@
-function [] = PP_DevianceGraphs(dev, devControl, dev_min, ratio_strength, graphPairs)
+function [] = PP_DevianceGraphs(dev, dev_smoothed, devControl, dev_min, ratio_strength, graphPairs)
 %Purpose: To create a deviance graph per cell pair. Each graph will have
 %         the deviance between the cell pair in black, and the control
 %         deviance in red. Each graph will also denote the assembly
@@ -36,12 +36,10 @@ for ipair = 1:number_of_pairs
         time = (0:150)
         plot(time, dev(:, pairs_to_graph(ipair)),'b')
         hold on
-        dev_smoothed_coeff = polyfit(time, dev(:, pairs_to_graph(ipair))',4);
-        dev_smoothed = polyval(dev_smoothed_coeff, time);
-        
-        plot(time, dev_smoothed,'k');
+
+        plot(time, dev_smoothed(:, pairs_to_graph(ipair)),'k');
         %Find the min dev 
-        min_win_pairs(ipair) = find(dev(:,pairs_to_graph(ipair)) == dev_min(pairs_to_graph(ipair)));
+        %+++min_win_pairs(ipair) = find(dev(:,pairs_to_graph(ipair)) == dev_min(pairs_to_graph(ipair)));
         
             txt = (['Time Window = ' num2str(min_win_pairs(ipair)) ' ms']);
             text(1, max(devControl(:,pairs_to_graph(ipair)))+1.5, txt);
@@ -49,10 +47,7 @@ for ipair = 1:number_of_pairs
          
             %average over all control trials in 3rd deminsion and plot
             average_control = mean(devControl,3);
-            %control_smoothed_coeff = polyfit(time, average_control(:, pairs_to_graph(ipair))',2);
-            %control_smoothed = polyval(control_smoothed_coeff, time);
             plot(time, average_control(:,pairs_to_graph(ipair)), 'r');
-            %plot(time, control_smoothed(:, pairs_to_graph(ipair)), 'g');
             
             %Label Graph Axis
             xlabel('Time (ms)')

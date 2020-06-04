@@ -48,8 +48,9 @@ for ipair = 1:length(choice_graphPairs)
     subplot(ceil(length(choice_graphPairs)/4),4,ipair);
     plot(lags, specified_ccg);
     title(['Cross Correlation: ' num2str(cell_1) ' vs ' num2str(cell_2)])
-    ylabel('Correlation')
+    ylabel('Count')
     xlabel('Time Lag (s)')
+    xlim([-.5 .5])
 end
 % OLD CODE
 % for ipair = 1:length(choice_graphPairs)
