@@ -30,7 +30,7 @@
 %paths with result data
     basepath = ('C:\Users\rcbul\Documents\English Lab\');
     addpath(genpath(basepath));
-    all_data_path = [basepath 'PP_RSC_Data\'];
+    all_data_path = [basepath 'PP_RSC_Data\']; %path with PairsToRun
     data_path = [basepath 'PP_RSC_Data\' data_folder];
     spike_info_path = [basepath 'PP_RSC_Data\' spike_info_folder];
 %% EXTRA Specifications
@@ -40,7 +40,7 @@
         %choice_analysisPairs = "WeakPairs";
         %choice_analysisPairs = "StrongPairs";
   % Graping (Deviance, Cross Corr, Rastor): Which pairs?
-        choice_graphPairs = [66,14,105];
+        choice_graphPairs = [1,51, 14];
   % Smooth Data (1) or Raw (0)?
         choice_smooth = 1;    
         %choice_smooth = 0;
@@ -55,7 +55,7 @@ set(groot, ...
 'DefaultAxesFontUnits', 'points', ...
 'DefaultAxesFontSize', 12, ...
 'DefaultAxesFontName', 'Arial', ...
-'DefaultLineLineWidth', 1.25, ...
+'DefaultLineLineWidth', 1, ...
 'DefaultTextFontUnits', 'Points', ...
 'DefaultTextFontSize', 12, ...
 'DefaultTextFontName', 'Arial', ...
@@ -122,7 +122,14 @@ load('m115_191203_152410_2.spikes.cellinfo.mat')
 cd(all_data_path)
 load('pairsToRun.mat')
 
-[smoothedTrains, pair_idx] = PP_Raster_SmoothedTrains(choice_graphPairs, binned_spikes, pairsToRun, spikes)
+clear velocities
+clear extraPredictors
+clear position_coords
+
+choice_sec = 105; %which second you want to plot
+graph_pair = 5; %idk why only one graph at a time works.
+
+PP_Raster_SmoothedTrains(graph_pair, choice_sec, binned_spikes, pairsToRun, spikes)
 
 %% Place Field 
 
