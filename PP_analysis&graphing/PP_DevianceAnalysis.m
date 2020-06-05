@@ -1,4 +1,4 @@
-function [pairs_for_analysis, min_win_total, min_win_pairs] = PP_DevianceAnalysis (dev,dev_min, analysisPairs, iweak_pairs, istrong_pairs)
+function [pairs_for_analysis, min_win_total, min_win_pairs] = PP_DevianceAnalysis (dev_smoothed,dev_min, analysisPairs, iweak_pairs, istrong_pairs)
 %Purpose: To find the minimum optimal time window for all pairs and
 %         to also find the minimum optimal time window for a specified
 %         subset of pairs.
@@ -17,10 +17,10 @@ function [pairs_for_analysis, min_win_total, min_win_pairs] = PP_DevianceAnalysi
 %Created: 06/01/20 by Reagan Bullins
 
 %% Analysis: get min win for all windows
-[~, number_of_pairs_need_minWin] = size(dev);
+[~, number_of_pairs_need_minWin] = size(dev_smoothed);
 min_win_total = zeros(1, number_of_pairs_need_minWin);
 for ipair = 1:number_of_pairs_need_minWin
-    min_win_total(ipair) = find(dev(:,ipair) == dev_min(ipair));
+    min_win_total(ipair) = find(dev_smoothed(:,ipair) == dev_min(ipair));
 end
     
 
@@ -42,6 +42,6 @@ end
 %find min win for specified pairs
 min_win_pairs = zeros(1, length(pairs_for_analysis));
 for ipair = 1:length(pairs_for_analysis)
-   min_win_pairs(ipair) = find(dev(:,pairs_for_analysis(ipair)) == dev_min(pairs_for_analysis(ipair)));
+   min_win_pairs(ipair) = find(dev_smoothed(:,pairs_for_analysis(ipair)) == dev_min(pairs_for_analysis(ipair)));
 end
 end

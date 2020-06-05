@@ -41,9 +41,6 @@
         %choice_analysisPairs = "StrongPairs";
   % Graping (Deviance, Cross Corr, Rastor): Which pairs?
         choice_graphPairs = [1,51, 14];
-  % Smooth Data (1) or Raw (0)?
-        choice_smooth = 1;    
-        %choice_smooth = 0;
   
 %% Graphing Defaults
 
@@ -77,11 +74,11 @@ cd(data_path)
 
 %% Assembly StrengthOnly 
 
-[dev_smoothed, ratio_strength, dev_min, weak_pairs, strong_pairs] = PP_AssemblyStrength (dev, devControl, data_folder, choice_smooth);
+[dev_smoothed, ratio_strength, dev_min, weak_pairs, strong_pairs] = PP_AssemblyStrength (dev, devControl, data_folder);
 
 %% Deviance Analysis 
 
-[pairs_for_analysis, min_win_total, min_win_pairs] = PP_DevianceAnalysis (dev,dev_min choice_analysisPairs, weak_pairs, strong_pairs);
+[pairs_for_analysis, min_win_total, min_win_pairs] = PP_DevianceAnalysis (dev_smoothed,dev_min, choice_analysisPairs, weak_pairs, strong_pairs);
 
 %% Deviance Graph 
 
@@ -107,7 +104,7 @@ PP_AssemblyStrength_Hist (ratio_strength, bin_interval);
 %% Scatterplot of Optimal Time Windows: All
 
 y_plot_limit = 20;
-PP_OptimalWindow_ScatterPlot(min_win,dev,devControl,y_plot_limit);
+PP_OptimalWindow_ScatterPlot(min_win_total,dev_smoothed,devControl,y_plot_limit);
 
 %% Cross Correlograms of Pairs :Graph specifications
 
