@@ -17,6 +17,7 @@ function [] = PP_Raster_SmoothedTrains(choice_graphPairs,choice_sec, binned_spik
 %           graphing windows, or you can change code to run all)
 %Options: win_num: windows to smooth data over, you can change this
 
+%Credits: Adaptations to David Tingley's Smooth Train Code is implemented
 %Created: 06/03/20 by Reagan Bullins
 
 %% Get smoothed spike trains for different smoothing windows

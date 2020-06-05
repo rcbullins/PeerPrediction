@@ -9,9 +9,10 @@ function [dev_smoothed, ratio_strength, dev_min, iweak_pair, istrong_pair] = PP_
 %         weak_pairs (assemb strength)
 %         strong_pairs (assemb strength)
 %         dev_smoothed
-
+%Credits: David Tingley for code calculation of Assembly Strength Ratio 
 %Created: 03/30/20 by Reagan Bullins
 %Updated: 06/03/20 by Reagan Bullins
+%%
   [~,number_of_pairs] = size(dev);
 if choice_smooth == 0
     dev_min = zeros(1, number_of_pairs);
