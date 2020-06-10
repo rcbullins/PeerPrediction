@@ -40,7 +40,7 @@
         %choice_analysisPairs = "WeakPairs";
         %choice_analysisPairs = "StrongPairs";
   % Graping (Deviance, Cross Corr, Rastor): Which pairs?
-        choice_graphPairs = [1,51, 14];
+        choice_graphPairs = [9];
   
 %% Graphing Defaults
 
@@ -124,9 +124,9 @@ clear extraPredictors
 clear position_coords
 
 choice_sec = 105; %which second you want to plot
-graph_pair = 5; %idk why only one graph at a time works.
+graph_pair = 3; %idk why only one graph at a time works.
 
-PP_Raster_SmoothedTrains(graph_pair, choice_sec, binned_spikes, pairsToRun, spikes)
+[smoothedTrains] = PP_Raster_SmoothedTrains(graph_pair, choice_sec, binned_spikes, pairsToRun, spikes)
 
 %% Place Field 
 

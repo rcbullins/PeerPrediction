@@ -1,4 +1,4 @@
-function [] = PP_Raster_SmoothedTrains(choice_graphPairs,choice_sec, binned_spikes, pairsToRun, spikes)
+function [smoothedTrains] = PP_Raster_SmoothedTrains(choice_graphPairs,choice_sec, binned_spikes, pairsToRun, spikes)
 %Purpose: Create cross correlograms for specified pairs.
 
 %Dependencies: Buzcode
@@ -40,6 +40,7 @@ for ipair = 1:length(choice_graphPairs)
            disp( 'hi');
             for time_win = 1:size(spikeTimes, 3)%for length of whole recording
                 if time_win > win_num(win) & time_win + win_num(win) < size(spikeTimes,3)
+                  
                      if win_num(win) == 0 
                         smoothedTrains(win,time_win)= spikeTimes(cell_2,:,time_win);
                      elseif win_num(win) > 0
@@ -47,10 +48,12 @@ for ipair = 1:length(choice_graphPairs)
                      end
                 end
                     if time_win <= win_num(win)
+                      
                         j = time_win - 1;
                         smoothedTrains(win,time_win)=  sum(spikeTimes(cell_2,:,(time_win - j:time_win + win_num(win)))/(length(1:time_win + win_num(win))),3);
                     end
                     if time_win + win_num(win) >= size(spikeTimes,3)
+                      
                         j = size(spikeTimes,3) - time_win;
                         smoothedTrains(win,time_win)=  sum(spikeTimes(cell_2,:,(time_win - win_num(win):time_win + j))/(length(time_win - win_num(win):size(spikeTimes,3))),3);
                     end 
@@ -87,7 +90,7 @@ for ipair = 1:length(choice_graphPairs)
             link_ax(idx_win) = subplot(6,1,idx_win+2);
             plot(smoothedTrains(idx_win, choice_sec*1000:(choice_sec+1)*1000));
             hold on
-             sgtitle(['Actual vs Predictor Spike Trains: Cell ' num2str(cell_1) ' vs ' num2str(cell_2)']);
+             %sgtitle(['Actual vs Predictor Spike Trains: Cell ' num2str(cell_1) ' vs ' num2str(cell_2)']);
             title(['Smoothed Predictor ' num2str(win_num(idx_win)) 'ms'])
             xlim([0 1000])
             if idx_win < length(win_num)
@@ -101,8 +104,8 @@ for ipair = 1:length(choice_graphPairs)
           
          end
     %Graph specs
-        sgtitle(['Actual vs Predictor Spike Trains: Cell ' num2str(cell_1) ' vs ' num2str(cell_2)']);
-      
+       % sgtitle(['Actual vs Predictor Spike Trains: Cell ' num2str(cell_1) ' vs ' num2str(cell_2)']);
+     
         hold off
 end
     disp('Yay Science!')
