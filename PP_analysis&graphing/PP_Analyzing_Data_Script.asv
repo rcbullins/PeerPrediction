@@ -79,15 +79,13 @@ cd(data_path)
 %% If Win Range is NOT continuous 
 if winRange(2) ~= winRange(1)+1
     %take away all zero rows in dev and devControl
-     dev = dev(any(dev,2),:);
-     winRangeT = winRange +1;
-     devControl = devControl(winRangeT,:,:);
-    
+     devT = dev(any(dev,2),:);
+     devControlT = devControl(any(devControl,2),3);
 end
 
 %% Assembly StrengthOnly 
 
-[dev_smoothed, ratio_strength, dev_min, weak_pairs, strong_pairs] = PP_AssemblyStrength (dev, devControl, data_folder, winRange);
+[dev_smoothed, ratio_strength, dev_min, weak_pairs, strong_pairs] = PP_AssemblyStrength (dev, devControl, data_folder);
 
 %% Deviance Analysis 
 

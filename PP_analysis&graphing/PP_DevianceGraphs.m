@@ -1,4 +1,4 @@
-function [] = PP_DevianceGraphs(dev, dev_smoothed, devControl, dev_min, ratio_strength, graphPairs)
+function [] = PP_DevianceGraphs(dev, dev_smoothed, devControl, dev_min, ratio_strength, graphPairs, winRange)
 %Purpose: To create a deviance graph per cell pair. Each graph will have
 %         the deviance between the cell pair in black, and the control
 %         deviance in red. Each graph will also denote the assembly
@@ -34,7 +34,7 @@ for ipair = 1:number_of_pairs
             subplot(5,row_num,ipair);
         end
         %Time is X-axis and equals how many windows were smoothed over
-        time = (0:150);
+        time = winRange; %was 150
         %Average over all control trials in 3rd deminsion and plot
         average_control = mean(devControl,3);
         plot(time, average_control(:,pairs_to_graph(ipair)), 'r');
@@ -55,6 +55,7 @@ for ipair = 1:number_of_pairs
         txt_assembly = (['Assembly Strength = ' num2str(ratio_strength(pairs_to_graph(ipair)))]);
         title({['Pair ' num2str(pairs_to_graph(ipair)) ' Deviance'], txt_assembly})
         ylim([-inf max(devControl(:,pairs_to_graph(ipair))) + 2.5])
+        xlim([0 150])
     end
   
 end

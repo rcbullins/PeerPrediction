@@ -7,13 +7,13 @@
 %         -Which JuxtaSorter & which ExtraSorter
 
 %% DEFINE DRIVE & SORTERS - EVERYTIME :)
-    drive_code = 'E';     
+    drive_code = 'C';     
       % Reagan = E 
       % Lianne = E
-    drive_buzcode = 'E';
+    drive_buzcode = 'C';
       % Reagan = E
       % Lianne = C
-
+     
 %% Add & Define Generic Pathways
     if strcmp(drive_code, 'D')
         addpath(genpath('D:\Data\PeerPrediction_RSC\'))
