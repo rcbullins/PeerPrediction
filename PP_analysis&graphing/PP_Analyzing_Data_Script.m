@@ -10,7 +10,7 @@
 %         Deviance Graphs per cell pair
 %         Histogram of Optimal PP Window
 %         ScatterPlot of Error vs Optimal Time Window
-:w
+
 % Created: 3/23/20 by Reagan Bullins
 % Updated: 6/01/20 by Reagan Bullins          
 
@@ -20,7 +20,14 @@
 %           pairs you want to graph (or all- but that's a lot)
 %           smoothing data or not
 
-
+%% TEmp
+winRange = (0:1:150)
+tic
+[dev_20m_1bin devControl_20m_1bin] = bz_peerPrediction(binned_spikes(:,1,1:1200000),winRange,[],pairsToRun(1:25,:));
+disp('Done')
+cd('C:\Users\rcbul\Documents\English Lab\PP_RSC_Data\pp_bin_trials');
+save('20m_1bin.mat','dev_20m_1bin', 'devControl_20m_1bin')
+toc
 %% Define Paths
 %Folder with result data :NORMAL OR POISSON
     data_folder = 'pp_batch' ;
@@ -36,15 +43,16 @@
 %% EXTRA Specifications
   % Analyze all pairs or a subset?
         choice_analysisPairs = "All";
-         %choice_analysisPairs = [1:92];
+         %choice_analysisPairs = [1:25];
         %choice_analysisPairs = "WeakPairs";
         %choice_analysisPairs = "StrongPairs";
   % Graping (Deviance, Cross Corr, Rastor): Which pairs?
-        choice_graphPairs = [1,2];
+        choice_graphPairs = [1,51, 185];
   % What winRange was used?
-        winRange = (0:50:150);
-        %winRange = (0:150);
+        winRange = (0:3:150);
+        %winRange = (0:5:150);
         %winRange = (0:10:150);
+        %winRange = (0:150);
   
 %% Graphing Defaults
 
@@ -119,9 +127,14 @@ PP_AssemblyStrength_Hist (ratio_strength, bin_interval);
 y_plot_limit = 20;
 PP_OptimalWindow_ScatterPlot(min_win_total,dev_smoothed,devControl,y_plot_limit);
 
+%% Scatterplot of Optimal Time Windows: Analysis Specifications
+
+y_plot_limit = 20;
+PP_OptimalWindow_ScatterPlot(min_win_pairs,dev_smoothed,devControl,y_plot_limit);
+
 %% Cross Correlograms of Pairs :Graph specifications
 
-bin_size = .03; %also default is .01
+bin_size = .01; %also default is .01
 PP_crosscorr(bin_size, choice_graphPairs,all_data_path, spike_info_path)
 
 %% Rastor for Actual and Predictor: Graph specifications
@@ -137,7 +150,7 @@ clear extraPredictors
 clear position_coords
 
 choice_sec = 105; %which second you want to plot
-graph_pair = 3; %idk why only one graph at a time works.
+graph_pair = 185; %idk why only one graph at a time works.
 
 [smoothedTrains] = PP_Raster_SmoothedTrains(graph_pair, choice_sec, binned_spikes, pairsToRun, spikes)
 

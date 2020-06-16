@@ -14,7 +14,9 @@ function [] = PP_OptimalWindow_ScatterPlot(min_win,dev,devControl, y_plot_limit)
 %Created: 4/9/20 by Reagan Bullins
 
 %%
-[bin_win_max,num_pairs] = size(dev); % CAN adjust
+%[bin_win_max,num_pairs] = size(dev); % CAN adjust
+[bin_win_max] = size(dev, 1);
+num_pairs = length(min_win);
 devControl_avg = (mean(devControl(:,:,:),3));
 
 for ipair = 1:num_pairs
