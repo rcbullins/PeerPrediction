@@ -20,7 +20,7 @@
 %           pairs you want to graph (or all- but that's a lot)
 %           smoothing data or not
 
-%% TEmp
+%% Temporary for running code
 winRange = (0:1:150)
 tic
 [dev_20m_1bin devControl_20m_1bin] = bz_peerPrediction(binned_spikes(:,1,1:1200000),winRange,[],pairsToRun(1:25,:));
