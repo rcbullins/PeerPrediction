@@ -1,5 +1,5 @@
 function [dev devControl] =...
-    bz_peerPrediction(spikeTimes,winRange,extraPredictors,pairsToRun)
+    bz_peerPredictionRB(spikeTimes,winRange,extraPredictors,pairsToRun)
 
 %altered to specifiy dev windows 
 % INPUT
@@ -84,7 +84,7 @@ for win = winRange
 %     tic
     %              stats{c}   devControl(c,:,:) statsControl{c}
        [dev(win+1,:,:) devControl(win+1,:,:)] = ...
-           parGLMRun(win,spikeTimes,extraPredictors,pairsToRun,numTrials);
+           parGLMRunRB(win,spikeTimes,extraPredictors,pairsToRun,numTrials);
 %        c = c+1
        win
 %        toc
@@ -93,7 +93,7 @@ end
 
 %               stats devControl statsControl
 function [dev devControl] = ...
-    parGLMRun(win,spikeTimes,extraPredictors,pairsToRun,numTrials)
+    parGLMRunRB(win,spikeTimes,extraPredictors,pairsToRun,numTrials)
 warning off;
 pred_last = 0;
 for pair = 1:size(pairsToRun(:,1),1)
@@ -136,11 +136,11 @@ end
 %             yhat(pair,trial,:) = glmval(results,[predictor; 1:size(spikeTimes,3)]','identity');
 
             if numTrials == 1 % we need another way to shuffle if only one trial is given
-                for iter = 1:5
+                for iter = 1:3  % changed to 3 from 5
                     predictorControlShifted = circshift(predictorControl,...
                         round(rand*length(predictorControl)),2);
                     [resultsControl(:,iter) devControl(pair,trial,iter)] = ...
-                    glmfit([predictorControlShifted;extraPredictors]',actual,'normal');
+                    glmfit([predictorControlShifted;extraPredictors]',actual,'normal'); %'Constant', results(1) option
                 end
             else
                 [resultsControl devControl(pair,trial)] = ...

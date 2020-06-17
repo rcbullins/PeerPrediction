@@ -1,4 +1,4 @@
-function [pairs_for_analysis, min_win_total, min_win_pairs] = PP_DevianceAnalysis (dev_smoothed,dev_min, analysisPairs, iweak_pairs, istrong_pairs)
+function [pairs_for_analysis, min_win_total, min_win_pairs] = PP_DevianceAnalysis (dev_smoothed,dev_min, analysisPairs, iweak_pairs, istrong_pairs, winRange)
 %Purpose: To find the minimum optimal time window for all pairs and
 %         to also find the minimum optimal time window for a specified
 %         subset of pairs.
@@ -20,7 +20,12 @@ function [pairs_for_analysis, min_win_total, min_win_pairs] = PP_DevianceAnalysi
 [~, number_of_pairs_need_minWin] = size(dev_smoothed);
 min_win_total = zeros(1, number_of_pairs_need_minWin);
 for ipair = 1:number_of_pairs_need_minWin
-    min_win_total(ipair) = find(dev_smoothed(:,ipair) == dev_min(ipair));
+   % min_win_total(ipair) = find(dev_smoothed(:,ipair) == dev_min(ipair));
+   % OLD RENDETION ^
+   % NEW for VARYING TIME WINDOWS, works of 0:150 but not log...
+    min_win_idx = find(dev_smoothed(:,ipair) == dev_min(ipair));
+   min_win_total(ipair) = winRange(min_win_idx)+1;
+  
 end
     
 

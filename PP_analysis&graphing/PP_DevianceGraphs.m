@@ -54,7 +54,7 @@ for ipair = 1:number_of_pairs
         ylabel('Deviance')
         txt_assembly = (['Assembly Strength = ' num2str(ratio_strength(pairs_to_graph(ipair)))]);
         title({['Pair ' num2str(pairs_to_graph(ipair)) ' Deviance'], txt_assembly})
-        ylim([-inf max(devControl(:,pairs_to_graph(ipair))) + 2.5])
+        %ylim([-inf max(devControl(:,pairs_to_graph(ipair))) + 2.5])
         xlim([0 150])
     end
   

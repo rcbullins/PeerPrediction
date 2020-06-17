@@ -21,12 +21,13 @@
 %           smoothing data or not
 
 %% Temporary for running code
-winRange = (0:1:150)
+%winRange = (0:1:150);
+%winRange = [1 2 4 8 16 32 64 128 256]; %add 0
 tic
-[dev_20m_1bin devControl_20m_1bin] = bz_peerPrediction(binned_spikes(:,1,1:1200000),winRange,[],pairsToRun(1:25,:));
+[dev devControl] = bz_peerPredictionRB(binned_spikes(:,1,1:600000),winRange,[],pairsToRun(1:25,:));
 disp('Done')
 cd('C:\Users\rcbul\Documents\English Lab\PP_RSC_Data\pp_bin_trials');
-save('20m_1bin.mat','dev_20m_1bin', 'devControl_20m_1bin')
+save('dev_log_test1.mat','dev', 'devControl')
 toc
 %% Define Paths
 %Folder with result data :NORMAL OR POISSON
@@ -47,7 +48,7 @@ toc
         %choice_analysisPairs = "WeakPairs";
         %choice_analysisPairs = "StrongPairs";
   % Graping (Deviance, Cross Corr, Rastor): Which pairs?
-        choice_graphPairs = [1,51, 185];
+        choice_graphPairs = [1];
   % What winRange was used?
         winRange = (0:3:150);
         %winRange = (0:5:150);
@@ -85,12 +86,12 @@ cd(data_path)
 [dev, devControl] = PP_Load_and_Concatenate(data_path);
 
 %% If Win Range is NOT continuous 
-if winRange(2) ~= winRange(1)+1
-    %take away all zero rows in dev and devControl
+if winRange(3) ~= winRange(2)+1
+    %take away all zero rows in dev and devControl if window isn't
+    %sequential
      dev = dev(any(dev,2),:);
      winRangeT = winRange +1;
      devControl = devControl(winRangeT,:,:);
-    
 end
 
 %% Assembly StrengthOnly 
@@ -99,7 +100,7 @@ end
 
 %% Deviance Analysis 
 
-[pairs_for_analysis, min_win_total, min_win_pairs] = PP_DevianceAnalysis (dev_smoothed ,dev_min, choice_analysisPairs, weak_pairs, strong_pairs);
+[pairs_for_analysis, min_win_total, min_win_pairs] = PP_DevianceAnalysis (dev_smoothed ,dev_min, choice_analysisPairs, weak_pairs, strong_pairs, winRange);
 
 %% Deviance Graph 
 
