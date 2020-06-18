@@ -1,7 +1,10 @@
 function [dev devControl] =...
     bz_peerPredictionRB(spikeTimes,winRange,extraPredictors,pairsToRun)
 
-%altered to specifiy dev windows 
+% Copy code & altered: 6/18/20 by Reagan Bullins
+%       - 3 devControl trials, instead of 5
+%       - poisson distribution link function instead of normal
+
 % INPUT
 % 
 %     spikeTimes - (M x N x D) matrix of spike times. M is the cell number, 
@@ -132,7 +135,7 @@ end
             
 %                                stats(pair,trial)
             [results dev(pair,trial) ] = ...
-            glmfit([predictor;extraPredictors]',actual,'normal');
+            glmfit([predictor;extraPredictors]',actual,'poisson');
 %             yhat(pair,trial,:) = glmval(results,[predictor; 1:size(spikeTimes,3)]','identity');
 
             if numTrials == 1 % we need another way to shuffle if only one trial is given
@@ -140,11 +143,11 @@ end
                     predictorControlShifted = circshift(predictorControl,...
                         round(rand*length(predictorControl)),2);
                     [resultsControl(:,iter) devControl(pair,trial,iter)] = ...
-                    glmfit([predictorControlShifted;extraPredictors]',actual,'normal'); %'Constant', results(1) option
+                    glmfit([predictorControlShifted;extraPredictors]',actual,'poisson'); %'Constant', results(1) option
                 end
             else
                 [resultsControl devControl(pair,trial)] = ...
-                    glmfit([predictorControl;extraPredictors]',actual,'normal');
+                    glmfit([predictorControl;extraPredictors]',actual,'poisson');
             end
             
 %             yhatControl(pair,trial,:) = glmval(results,[predictorControl; 1:size(spikeTimes,3)]','identity');            
