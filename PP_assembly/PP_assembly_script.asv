@@ -1,7 +1,6 @@
 % Script for running assembly code
 % Contributor: Sam
-% 
-
+%
 %% Adding Paths
 
 %Add Basepath for all code and data used
@@ -23,10 +22,6 @@ tic
 toc
 cd('C:\Users\rcbul\Documents\English Lab\PP_RSC_Data\pp_assemb')
 save('epoch_all.mat', 'log_likelihood', 'weights')
-
-%% Load and Concat Data? maybe
-
-
 
 %% weighted raster
 % Define target Cell & time window to plot

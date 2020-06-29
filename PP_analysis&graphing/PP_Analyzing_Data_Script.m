@@ -129,6 +129,8 @@ PP_DevianceGraphs(dev, dev_smoothed, devControl, dev_min, ratio_strength, choice
 %% Histogram of Optimal Time Windows : ALL
 bin_win_count = 1; %binned within 3 ms time windows -- CAN adjust
 [bin_win_max,~] = size(dev); % CAN adjust 
+bin_win_max = winRange(bin_win_max);
+bin_win_max = bin_win_max + bin_win_count;
 
 [optimal_window] = PP_TimeWindow_Histogram (bin_win_count, bin_win_max, min_win_total); %optimal window is median
 
