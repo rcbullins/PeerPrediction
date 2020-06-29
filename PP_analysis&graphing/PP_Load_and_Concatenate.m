@@ -1,7 +1,11 @@
-function [dev_final, devControl_final] = PP_Load_and_Concatenate(data_path)
+function [dev_final, devControl_final] = PP_Load_and_Concatenate(result_data_path)
 %Purpose: This function will load all data files from the PP function.
 %         And all files will be concatenated.
-%Inputs: data path
+%Inputs: data path containing all mat files with dev and devControl to be 
+%           concatenated. Names of mat files must be equal length. If
+%           result files to be concatenated go into the double digits, the
+%           single digit file numbers must be as such '0#' to be consistent
+%           in size.
 
 %Outputs: dev_final : may be in one matrix if concatenated, or may be in
 %                     array if not concatenated
@@ -10,11 +14,11 @@ function [dev_final, devControl_final] = PP_Load_and_Concatenate(data_path)
 % Created: 3/23/20 by Reagan Bullins
 
 %% go to data folder
-    cd(data_path)
+    cd(result_data_path)
 
 %% load in data & concatenat if prompted
 %find folder name
-    [~,folder_name,~] = fileparts(data_path);
+    [~,folder_name,~] = fileparts(result_data_path);
 %find directories for all files with folder name
     files_struct = what(folder_name)
 %find all mat files in main folder name

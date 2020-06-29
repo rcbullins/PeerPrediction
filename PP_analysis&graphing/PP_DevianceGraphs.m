@@ -47,6 +47,7 @@ for ipair = 1:number_of_pairs
         legend('Control Deviance','Raw Deviance','Smoothed Deviance');
         %Find the minimum deviance time window
         min_win_pairs(ipair) = find(dev_smoothed(:,pairs_to_graph(ipair)) == dev_min(pairs_to_graph(ipair)));
+        min_win_pairs(ipair) = winRange(min_win_pairs(ipair)); %testing this :)
         txt = (['Time Window = ' num2str(min_win_pairs(ipair)) ' ms']);
         text(1, max(devControl(:,pairs_to_graph(ipair)))+1.5, txt);     
         %Label Graph Axis

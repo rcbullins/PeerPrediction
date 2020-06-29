@@ -1,4 +1,4 @@
-function[] = PP_crosscorr(bin_size,choice_graphPairs, all_data_path, spike_info_path)
+function[] = PP_crosscorr(bin_size, spikes, choice_graphPairs, pairsToRun, bin_win_max)
 %Purpose: Create cross correlograms for specified pairs.
 
 %Dependencies: Buzcode
@@ -6,27 +6,12 @@ function[] = PP_crosscorr(bin_size,choice_graphPairs, all_data_path, spike_info_
 %              Spiking Data from Recording
 
 %Inputs: choice_graphPairs (what pairs to graph)
-%        basepath (path to folder with PairsToRun)
-%        spike_info_path (path with spiking info in it)
+%        bin_win_max (how long the recording is, necessary for binning)
 
 %Output: Cross Correlogram for each pair
 
 %Created: 06/03/20 by Reagan Bullins
 
-%% Load Necessary Data- Spikes and Pairs
-     cd(all_data_path)
-     load('pairsToRun.mat')
-     cd(spike_info_path)
-     load('m115_191203_152410_2 peerPrediction_inputs.mat')
-     load('m115_191203_152410_2.spikes.cellinfo.mat')
-
-%% Get length of recording in ms & Clean WS
-    [~, bin_win_max] = size(position_coords);
-    clear position_coords
-    clear phase_rad
-    clear extraPredictors
-    clear velocities
-    clear binned_spikes
 
 %% Graph
 

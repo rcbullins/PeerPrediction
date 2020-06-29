@@ -1,4 +1,4 @@
-function [smoothedTrains] = PP_Raster_SmoothedTrains(choice_graphPairs,choice_sec, binned_spikes, pairsToRun, spikes)
+function [smoothedTrains] = PP_Raster_SmoothedTrains(choice_graphPairs,choice_sec, binned_spikes, pairsToRun, spikes, win_num)
 %Purpose: Create cross correlograms for specified pairs.
 
 %Dependencies: Buzcode
@@ -7,7 +7,8 @@ function [smoothedTrains] = PP_Raster_SmoothedTrains(choice_graphPairs,choice_se
 
 %Inputs: choice_graphPairs (what pairs to graph)
 %        binned_spikes (from pp_inputs)
-%        
+%        pairsToRun (matrix of pair numbers and corresponding cells
+%        spikes (original spike struct)
 
 %Output: Creates a figure with 6 subplots for each pair given
 %           First Raster: Cell 1 Spikes (actual)
@@ -25,7 +26,6 @@ function [smoothedTrains] = PP_Raster_SmoothedTrains(choice_graphPairs,choice_se
 spikeTimes = binned_spikes(:,1,:); %FOR NOW with only ONE Predictor
 %winRange = (0:150); %if want all windows smoothed over, & change
 %   win_num(win) to win 
-win_num = [25 50 100 150]; %the ms windows we will look at FOR SPEED
 
 for ipair = 1:length(choice_graphPairs)
     figure

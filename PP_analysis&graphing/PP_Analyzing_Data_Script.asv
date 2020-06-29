@@ -164,7 +164,7 @@ PP_OptimalWindow_ScatterPlot(min_win_pairs,dev_smoothed,devControl,y_plot_limit,
     clear binned_spikes
   % Define bin size
     bin_size = .01; %default is .01
-    PP_crosscorr(bin_size, spikes, choice_graphPairs, pairsToRun, bin_win_max)
+    PP_crosscorr(bin_size, choice_graphPairs, bin_win_max)
 
 %% Rastor for Actual and Predictor: Graph specifications
 
@@ -175,10 +175,9 @@ PP_OptimalWindow_ScatterPlot(min_win_pairs,dev_smoothed,devControl,y_plot_limit,
     load([session_name '.spikes.cellinfo.mat']);
   % Define second you want to graph and pair
     choice_sec = 105; %which second you want to plot
-    graph_pair = 1; %idk why only one graph at a time works.
-    win_num = [24 52 128 256]; %the ms windows we will look at FOR SPEED
+    graph_pair = 185; %idk why only one graph at a time works.
 
-[smoothedTrains] = PP_Raster_SmoothedTrains(graph_pair, choice_sec, binned_spikes, pairsToRun, spikes, win_num)
+[smoothedTrains] = PP_Raster_SmoothedTrains(graph_pair, choice_sec, binned_spikes, pairsToRun, spikes)
 
 %% Consistent Spiking Visualize 
 % in sam's code folder
