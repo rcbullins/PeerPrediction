@@ -4,6 +4,7 @@ function [dev devControl] =...
 % Copy code & altered: 6/18/20 by Reagan Bullins
 %       - 3 devControl trials, instead of 5
 %       - poisson distribution link function instead of normal
+%       - deleted control param from devControl
 
 % INPUT
 % 
@@ -143,11 +144,11 @@ end
                     predictorControlShifted = circshift(predictorControl,...
                         round(rand*length(predictorControl)),2);
                     [resultsControl(:,iter) devControl(pair,trial,iter)] = ...
-                    glmfit([predictorControlShifted;extraPredictors]',actual,'poisson'); %'Constant', results(1) option
+                    glmfit([predictorControlShifted;extraPredictors]',actual,'poisson','constant', 'off'); %'constant', 'off' option, default is on
                 end
             else
                 [resultsControl devControl(pair,trial)] = ...
-                    glmfit([predictorControl;extraPredictors]',actual,'poisson');
+                    glmfit([predictorControl;extraPredictors]',actual,'poisson', 'constant', 'off');
             end
             
 %             yhatControl(pair,trial,:) = glmval(results,[predictorControl; 1:size(spikeTimes,3)]','identity');            

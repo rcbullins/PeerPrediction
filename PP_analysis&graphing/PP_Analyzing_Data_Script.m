@@ -55,7 +55,9 @@
 %Deine DataPath that contains list of session names;
     data_path = [basepath 'PP_RSC_Data\' session_name];
 %Define ResultPath that contains results from peer prediction function
-    result_data_path = [data_path '\PeerPrediction\'];
+    data_set = 'PeerPrediction';
+    %data_set = 'PeerPredictionNoConstant';
+    result_data_path = [data_path '\' data_set '\'];
 %Result data format:NORMAL OR POISSON
     %data_format = 'pp_batch' ;
      data_format = 'pp_poisson'; %FOR NOW ALL ARE Poissons
