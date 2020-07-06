@@ -79,29 +79,7 @@ toc
         %winRange = [1:1:70]; %1to70
   
 %% Graphing Defaults
-
-set(groot, ...
-'DefaultFigureColor', 'w', ...
-'DefaultAxesLineWidth', 0.5, ...
-'DefaultAxesXColor', 'k', ...
-'DefaultAxesYColor', 'k', ...
-'DefaultAxesFontUnits', 'points', ...
-'DefaultAxesFontSize', 12, ...
-'DefaultAxesFontName', 'Arial', ...
-'DefaultLineLineWidth', 1, ...
-'DefaultTextFontUnits', 'Points', ...
-'DefaultTextFontSize', 12, ...
-'DefaultTextFontName', 'Arial', ...
-'DefaultAxesBox', 'off', ...
-'DefaultAxesTickLength', [0.02 0.025]);
- 
-% set the tickdirs to go out - need this specific order
-set(groot, 'DefaultAxesTickDir', 'out');
-set(groot, 'DefaultAxesTickDirMode', 'manual');
-
-
-% To restore a property to its original MATLAB® default, use the 'remove' keyword.
-% set(groot,'DefaultFigureColormap','remove')
+SetGraphDefaults;
 
 %% Load and Concatenate Data
 
@@ -133,15 +111,15 @@ PP_DevianceGraphs(dev, dev_smoothed, devControl, dev_min, ratio_strength, choice
 
 %% Histogram of Optimal Time Windows : ALL
 bin_win_count = 1; %binned within 3 ms time windows -- CAN adjust
-[bin_win_max,~] = size(dev); % CAN adjust 
-bin_win_max = winRange(bin_win_max);
+bin_win_max = winRange(length(winRange));
 bin_win_max = bin_win_max + bin_win_count;
 
 [optimal_window] = PP_TimeWindow_Histogram (bin_win_count, bin_win_max, min_win_total); %optimal window is median
 
 %% Histogram of Optimal Time Windows: Analysis Specifications
 bin_win_count = 1; %binned within 3 ms time windows -- CAN adjust
-[bin_win_max,~] = size(dev); % CAN adjust 
+bin_win_max = winRange(length(winRange)); % CAN adjust 
+bin_win_max = bin_win_max + bin_win_count;
 
 [optimal_window] = PP_TimeWindow_Histogram (bin_win_count, bin_win_max, min_win_pairs); %optimal window is median
 
@@ -196,7 +174,7 @@ cd(data_path)
 %% Place Field 
 
 
-%%
+%% Code for seeing cell specific involvement per bin size
 list_BIG_pairs = zeros(length(list_BIG),2);
 for i = 1:length(list_BIG)
     list_BIG_pairs(i,1) = pairsToRun(list_BIG(i),1);
@@ -209,6 +187,13 @@ for i = 1:length(list_big)
    list_big_pairs(i,2) = pairsToRun(list_big(i),2);
 end
 
+hist_BIG = zeros(580,1)
+hist_BIG(1:290,1) = list_BIG_pairs(:,1);
+hist_BIG(291:580,1) = list_BIG_pairs(:,2);
 
+hist_big = zeros(150,1)
+hist_big(1:75,1) = list_big_pairs(:,1);
+hist_big(76:150,1) = list_big_pairs(:,2);
 
-[n,edges] = histcounts[
+histogram(hist_big)
+

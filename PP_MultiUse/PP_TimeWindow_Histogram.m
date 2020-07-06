@@ -17,6 +17,7 @@ function [optimal_window] = PP_TimeWindow_Histogram (bin_win_count, bin_win_max,
 
 %Created: 3/31/20 by Reagan Bullins
 
+%%
 prompt = 'Histogram graph on log scale? Yes OR No: '
 choice_log = input(prompt,'s');
 

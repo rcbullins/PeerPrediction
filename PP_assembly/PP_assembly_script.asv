@@ -53,11 +53,11 @@ target_cell = 2;
 plot(winRange*1000, log_likelihood(target_cell,:))
 hold on
 txt = (['Time Window = ' num2str(optimal_win(target_cell)*1000) ' ms']);
-text(300, max(log_likelihood(target_cell,:)),txt);
+text(txt); 
 xlabel('Peer Prediction Timescale (ms)');
 ylabel('Log Likelihood'); % 'Predictability (bits s-1)'
 title(['Predictability vs Timescale for Cell:' num2str(target_cell)]); 
-xlim([0 winRange(length(winRange))*1000]);
+
 
 %% weighted raster
 % Define target Cell & time window to plot
