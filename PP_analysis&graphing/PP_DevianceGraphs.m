@@ -26,6 +26,7 @@ min_win_pairs = zeros(1,number_of_pairs);
 
 % Make a graph for each cell pair
 for ipair = 1:number_of_pairs
+        figure
         %Specify Length of Subplot
         if number_of_pairs < 5
             subplot(number_of_pairs,1,ipair)
@@ -39,6 +40,7 @@ for ipair = 1:number_of_pairs
         average_control = mean(devControl,3);
         plot(time, average_control(:,pairs_to_graph(ipair)), 'r');
         hold on
+     
         %Plot raw data for deviance in light gray
         plot(time, dev(:, pairs_to_graph(ipair)),'color', [.5,.5,.5]);
         %Plot smoothed data for deviance in blue
@@ -57,6 +59,11 @@ for ipair = 1:number_of_pairs
         title({['Pair ' num2str(pairs_to_graph(ipair)) ' Deviance'], txt_assembly})
         %ylim([-inf max(devControl(:,pairs_to_graph(ipair))) + 2.5])
         xlim([0 150])
+        
+        % save it
+%         cd('C:\Users\rcbul\Documents\English Lab\GraphsCompleted\RSC_WholeRecData\DevSamp');
+%         savefig(['pair' num2str(pairs_to_graph(ipair)) '_shuff5']);
+%         
     end
   
 end
