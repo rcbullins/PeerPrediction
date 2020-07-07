@@ -60,73 +60,11 @@ title(['Predictability vs Timescale for Cell:' num2str(target_cell)]);
 xlim([0 winRange(length(winRange))*1000]);
 
 
-%% weighted raster
-% Define target Cell & second of recording to plot
-    target_cell = 1;
-    time_plot = 10; %what second to plot
-% Get Weights of peer cells for target cell
-    target_weights = (weights{target_cell}(target_cell+1,:)); 
-    idx_weights = (1:num_cells);
-% Take out nan value (given target cell idx)
-    idx_nan = find(isnan(target_weights));
-    target_weights(idx_nan) = [];
-    idx_weights(idx_nan) = [];
-    zero_index = find(target_weights < 0, 1, 'first');
-% Create matrix of indexes and corresponding weights for each peer cell
-    target_idx_mat = [idx_weights;target_weights]';
-% Sort the peer cells based on weights (most - to most +)
-    sorted_weights = sortrows(target_idx_mat,2);
-% Add in row of zeros where weights change negative to positive: graphing
-% purposes
-    zero_index = find(sorted_weights(:,2) > 0, 1, 'first');
-    sorted_weights_wZ = zeros(num_cells,2);
-    sorted_weights_wZ(:,1) = [sorted_weights(1:zero_index-1,1)' 0 sorted_weights(zero_index:length(sorted_weights),1)']';
-    sorted_weights_wZ(:,2) = [sorted_weights(1:zero_index-1,2)' 0 sorted_weights(zero_index:length(sorted_weights),2)']';
-% Get index for raster plotting
-    raster_idx = sorted_weights_wZ(:,1);
-
-%% plot target cell
-    h1 = subplot(2,1,1);
-    title(['Target Cell: ' num2str(target_cell)])
-    target_spikes = spikes.times{target_cell};
-    target_x = find(target_spikes >= time_plot & target_spikes < time_plot+1);
-        for idx_x = 1:length(target_x)
-            xline(target_spikes(target_x(idx_x)));
-        end
-         xlim([time_plot time_plot+1]);
-         set(gca,'XTick',[]);
-         set(gca,'YTick',[]);
-%% make raster plot
-    h2 = subplot(2,1,2)
-    % Assigning color to row (yes important, yes kinda lengthy)
-    %RGB = rgb('dark red','magenta', 'rose', 'purplish', 'burple', 'true blue')
-   
-    % for each cell, plot a raster
-    for idx_cell = 1:length(raster_idx)
-       % if raster_idx is ZERO, this is a marker on the graph
-       if raster_idx(idx_cell) == 0
-           yline(idx_cell, '--');
-       else
-       %current cell spikes (positive to negative weight)
-       peer_cell = spikes.times{raster_idx(idx_cell)};
-       % only plot given window to plot
-       predict_x = find(peer_cell >= time_plot & peer_cell < time_plot+1);
-       % get y-axis established
-       y_idx = (1:length(predict_x));
-       % which y value to plot this cell on
-       y_idx(:) = idx_cell;
-       plot(peer_cell(predict_x),y_idx, '.r')
-       %xline(peer_cell(predict_x))
-       hold on
-       xlim([time_plot time_plot+1]);
-    end
-    end 
-     xlabel('Time(s)')
-     ylabel('Weights')
-     set(gca, 'YTick',[])
-     set(h1, 'OuterPosition',[0,0.85,1,.1]);
-     set(h2, 'OuterPosition',[0,.1,1,.75]);
-    
-
-
-
+%% Weighted Raster Plot
+% DEFINE Target Cell and Second to plot on graph
+    target_cell = 20;
+    time_plot = 200; 
+% Load spiking data
+    cd(data_path)
+    load([session_name '.spikes.cellinfo.mat']);
+Weighted_Raster_Asmb(spikes, weights, target_cell, time_plot, optimal_win, winRange)
