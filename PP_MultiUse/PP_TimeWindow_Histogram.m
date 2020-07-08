@@ -17,20 +17,22 @@ function [optimal_window] = PP_TimeWindow_Histogram (bin_win_count, bin_win_max,
 
 %Created: 3/31/20 by Reagan Bullins
 
+%%
 prompt = 'Histogram graph on log scale? Yes OR No: '
 choice_log = input(prompt,'s');
 
 figure
 nbins = (1:bin_win_count:bin_win_max) 
-histogram(min_win, nbins)
+%histogram(min_win, nbins)
 [counts_per_win, edges] = histcounts(min_win, nbins)
+histogram('BinEdges', edges, 'BinCounts', counts_per_win) %normalize??
 title('Optimal Peer Prediction Time Window')
 xlabel('Optimal Time Window (ms)')
 ylabel('Frequency')
 hold on
 xline(median(min_win), 'k','LineWidth',1.5)
 txt2 = (['Median Window = ' num2str(median(min_win)) 'ms']);
-text(60, max(counts_per_win)- 1, txt2)
+text(20, max(counts_per_win)- 1, txt2)
 
 optimal_window = median(min_win);
 
