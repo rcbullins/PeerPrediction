@@ -75,12 +75,21 @@ function [] = Weighted_Raster_Asmb(spikes, weights, target_cell, time_plot, opti
        xlim([time_plot time_plot+1]);
     end
     end 
+    %% Finishing touches
      xlabel('Time(s)')
-     ylabel('<--   - Weights +   --> ')
+     ylabel('Peer Cells')
      set(gca, 'YTick',[])
+     %set positions of subplots
      set(h1, 'OuterPosition',[0,0.85,.87,.1]);
      set(h2, 'OuterPosition',[0,.1,1,.75]);
-     colorbar('YTick', []);
+     % add color bar without y ticks
+     c = colorbar('YTick', []);
+     c.Ticks = [.5];
+     c.TickLabels = {'Weights'};
+     c.Color = [0 0 0];
+     text(time_plot+1.15, length(raster_idx), 'Positive', 'Color', colors(length(colors),:));
+     text(time_plot+1.15, 1, 'Negative','Color', colors(1,:));
+     %make colorbar same colors as on plot
      colormap(jet);
      end
 

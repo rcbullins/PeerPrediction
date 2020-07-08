@@ -12,20 +12,20 @@
 %Deine DataPath that contains list of session names;
     data_path = [basepath 'PP_RSC_Data\' session_name];
 %Define ResultPath that contains results from assembly function
-    result_data_path = [data_path '\Assembly\'];
+    result_data_path = [data_path '\Assembly_binLog\'];
 
 %% Defining Specifications
 
 winRange = [0.002, 0.004, 0.008, 0.016, 0.032, 0.064, 0.128, 0.256, 0.512, 1.024];
     
 %% Run Script
-% cd(data_path);
-% load([session_name '.spikes.cellinfo.mat']);
-% tic
-% [log_likelihood,weights] = CrossValidationAssemblyPrediction_Commented(spikes) % varargin if wanted
-% toc
-% cd('C:\Users\rcbul\Documents\English Lab\PP_RSC_Data\pp_assemb')
-% save('epoch_all.mat', 'log_likelihood', 'weights')
+cd(data_path);
+load([session_name '.spikes.cellinfo.mat']);
+tic
+[log_likelihood,weights] = CrossValidationAssemblyPrediction_Commented(spikes) % varargin if wanted
+toc
+cd('C:\Users\rcbul\Documents\English Lab\PP_RSC_Data\Testing')
+save('Test_space_peer.mat', 'log_likelihood', 'weights')
 
 %% Set Graph Defaults Now
 SetGraphDefaults;
