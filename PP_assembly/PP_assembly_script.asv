@@ -72,15 +72,6 @@ optimal_win_graph = optimal_win *1000; %make s to ms
 
 [optimal_window] = PP_TimeWindow_Histogram (bin_win_count, bin_win_max, optimal_win_graph); 
 
-%% Histogram COMBO: multiple overlays of histograms for different data set
-bin_win_count = 1; 
-winRange_graph = winRange *1000; %make in ms
-bin_win_max = winRange_graph(length(winRange));
-bin_win_max = bin_win_max + bin_win_count;
-optimal_win_graph1 = optimal_win1 *1000; %make s to ms
-optimal_win_graph2 = optimal_win2 *1000;
-
-[optimal_window] = Overlay_TimeWindow_Histogram(bin_win_count, bin_win_max, optimal_win_graph1, optimal_win_graph2); 
 %% predictability graph for a target cell
 target_cell = 2;
 
@@ -115,14 +106,4 @@ Weighted_Raster_Asmb(spikes, weights, target_cell, time_plot, optimal_win, winRa
 % Load Spiking data
     cd(data_path);
     load([session_name '.spikes.cellinfo.mat']);
-FiringRate_Weights_Scatter(target_cell, optimal_win, winRange, spikes, weights)
-%% Raster sorted by weight and colored by firing rate
-% DEFINE Target Cell and Second to plot on graph
-    target_cell = 20;
-    time_plot = 200; 
-% Load spiking data
-    cd(data_path)
-    load([session_name '.spikes.cellinfo.mat']);
-%currently will plot whole thing,,, takes a while so can change back to
-%inputting a time to plot
-Weighted_Raster_FiringRate(spikes, weights, target_cell, time_plot, optimal_win, winRange)
+FiringRate_Weights_Scatter(target_cell, optimal_win, winRange, spikes)

@@ -28,7 +28,7 @@ nbins = (1:bin_win_count:bin_win_max)
 histogram('BinEdges', edges, 'BinCounts', counts_per_win) %normalize??
 title('Optimal Peer Prediction Time Window')
 xlabel('Optimal Time Window (ms)')
-ylabel('Frequency')
+ylabel('Count')
 hold on
 xline(median(min_win), 'k','LineWidth',1.5)
 txt2 = (['Median Window = ' num2str(median(min_win)) 'ms']);

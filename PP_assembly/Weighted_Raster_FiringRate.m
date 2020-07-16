@@ -1,14 +1,20 @@
-function [] = Weighted_Raster_Asmb(spikes, weights, target_cell, time_plot, optimal_win, winRange)
-
-%Purpose: Creates a raster plot for a target cell. The target cell's rater
+function [] = Weighted_Raster_FiringRate(spikes, weights, target_cell, time_plot, optimal_win, winRange)
+%Purpose: Creates a raster plot for a target cell. The target cell's raster
     %will be at the top and the second half of the figure will contain peer
     %cell raster plots ordered on the y-axis by weights. Below the black line
     %will be negative weighted cell activity, and above the black line will be
-    %positive weighted cell activity.
-%Inputs:
-%Outputs:
-%Dependencies:
-%Created 7/7/20 by Reagan Bullins
+    %positive weighted cell activity. The color bar depicts the firing rate
+    %of each peer cell. 
+%Inputs: spikes (spikes struct)
+%        weights (given by CrossValidationAssemblyPrediction function)
+%        target cell (defined by user)
+%        time_polt (this is the actual second of the recording to be plotted)
+%        optimal_win (optimal window per cell)
+%        winRange (bin sizes)
+%Outputs: raster plot ordered by magnituded of weight of peer cell
+%Dependencies: crossValidationAssemblyPrediction
+
+%Created 7/16/20 by Reagan Bullins (variation of weighted_raster_Asmb)
 
 %%
 % Find optimal window for target_cell
@@ -41,19 +47,34 @@ function [] = Weighted_Raster_Asmb(spikes, weights, target_cell, time_plot, opti
     h1 = subplot(2,1,1);
     title(['Target Cell: ' num2str(target_cell)])
     target_spikes = spikes.times{target_cell};
-    target_x = find(target_spikes >= time_plot & target_spikes < time_plot+1);
-        for idx_x = 1:length(target_x)
-            xline(target_spikes(target_x(idx_x)), 'LineWidth', 1.25, 'Color','k');
+   % target_x = find(target_spikes >= time_plot & target_spikes < time_plot+1);
+        for idx_x = 1:length(target_spikes)
+            %xline(target_spikes(target_x(idx_x)), 'LineWidth', 1.25, 'Color','k');
+            xline(target_spikes(idx_x), 'LineWidth', 1.25, 'Color','k');
         end
          xlim([time_plot time_plot+1]);
          set(gca,'XTick',[]);
          set(gca,'YTick',[]);
-%% make raster plot
-    h2 = subplot(2,1,2)
-    % Assigning color to row (yes important, yes kinda lengthy)
-    %RGB = rgb('dark red','magenta', 'rose', 'purplish', 'burple', 'true blue')
+         
+%% Get firing rate
+
+    %want to order colors by firing rate
+    firing_rate = zeros(length(sorted_weights), 2);
+    max_time = max(cellfun(@max,spikes.times));
+    for icell = 1:length(sorted_weights)
+        num_spikes = length(spikes.times{sorted_weights(icell,1)});
+        firing_rate(icell, 2) = num_spikes/max_time;
+        firing_rate(icell, 1) = sorted_weights(icell, 1);
+    end
+    sorted_FR = sortrows(firing_rate,2);
+    %cell number ordered by firing rate
+    idx_FR = sorted_FR(:,1);
     colors = jet(num_cells);
     
+    
+%% make raster plot
+    h2 = subplot(2,1,2)
+  
     % for each cell, plot a raster
     for idx_cell = 1:length(raster_idx)
        % if raster_idx is ZERO, this is a marker on the graph
@@ -63,13 +84,17 @@ function [] = Weighted_Raster_Asmb(spikes, weights, target_cell, time_plot, opti
        %current cell spikes (positive to negative weight)
        peer_cell = spikes.times{raster_idx(idx_cell)};
        % only plot given window to plot
-       predict_x = find(peer_cell >= time_plot & peer_cell < time_plot+1);
+         %predict_x = find(peer_cell >= time_plot & peer_cell < time_plot+1);
        % get y-axis established
-       y_idx = (1:length(predict_x));
+          y_idx = (1:length(peer_cell)); %changed to peer cell from predict_x
        % which y value to plot this cell on
        y_idx(:) = idx_cell;
        %plot(peer_cell(predict_x),y_idx, '.r');
-       scatter(peer_cell(predict_x), y_idx, 4, colors(idx_cell,:), 'filled');
+       
+       %what index of firing rate this cell is, and assign color based on
+       %that
+       color_idx = find(idx_FR == raster_idx(idx_cell));
+       scatter(peer_cell, y_idx, 4, colors(color_idx,:), 'filled');
        %xline(peer_cell(predict_x))
        hold on
        xlim([time_plot time_plot+1]);
@@ -77,18 +102,18 @@ function [] = Weighted_Raster_Asmb(spikes, weights, target_cell, time_plot, opti
     end 
     %% Finishing touches
      xlabel('Time(s)')
-     ylabel('Peer Cells')
+     ylabel('Peer Cells Ordered by Weights')
      set(gca, 'YTick',[])
      %set positions of subplots
      set(h1, 'OuterPosition',[0,0.85,.87,.1]);
      set(h2, 'OuterPosition',[0,.1,1,.75]);
      % add color bar without y ticks
      c = colorbar('YTick', []);
-     c.Ticks = [0 0.5 1]
-     set(gca, c.TickLabels, '\color{red} Negative')
-     c.TickLabels = {'Negative', 'Weights', 'Positive'};
-     c.Color = [0 0 1]
+     c.Ticks = [.5];
+     c.TickLabels = {'Firing Rate'};
+     c.Color = [0 0 0];
+     text(time_plot+1.15, length(raster_idx), 'High', 'Color', colors(length(colors),:));
+     text(time_plot+1.15, 1, 'Low','Color', colors(1,:));
      %make colorbar same colors as on plot
      colormap(jet);
      end
-
