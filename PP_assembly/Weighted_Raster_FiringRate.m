@@ -47,10 +47,9 @@ function [] = Weighted_Raster_FiringRate(spikes, weights, target_cell, time_plot
     h1 = subplot(2,1,1);
     title(['Target Cell: ' num2str(target_cell)])
     target_spikes = spikes.times{target_cell};
-   % target_x = find(target_spikes >= time_plot & target_spikes < time_plot+1);
-        for idx_x = 1:length(target_spikes)
-            %xline(target_spikes(target_x(idx_x)), 'LineWidth', 1.25, 'Color','k');
-            xline(target_spikes(idx_x), 'LineWidth', 1.25, 'Color','k');
+    target_x = find(target_spikes >= time_plot & target_spikes < time_plot+1);
+        for idx_x = 1:length(target_x)
+            xline(target_spikes(target_x(idx_x)), 'LineWidth', 1.25, 'Color','k');
         end
          xlim([time_plot time_plot+1]);
          set(gca,'XTick',[]);
@@ -84,9 +83,9 @@ function [] = Weighted_Raster_FiringRate(spikes, weights, target_cell, time_plot
        %current cell spikes (positive to negative weight)
        peer_cell = spikes.times{raster_idx(idx_cell)};
        % only plot given window to plot
-         %predict_x = find(peer_cell >= time_plot & peer_cell < time_plot+1);
+         predict_x = find(peer_cell >= time_plot & peer_cell < time_plot+1);
        % get y-axis established
-          y_idx = (1:length(peer_cell)); %changed to peer cell from predict_x
+          y_idx = (1:length(predict_x)); 
        % which y value to plot this cell on
        y_idx(:) = idx_cell;
        %plot(peer_cell(predict_x),y_idx, '.r');
@@ -94,7 +93,7 @@ function [] = Weighted_Raster_FiringRate(spikes, weights, target_cell, time_plot
        %what index of firing rate this cell is, and assign color based on
        %that
        color_idx = find(idx_FR == raster_idx(idx_cell));
-       scatter(peer_cell, y_idx, 4, colors(color_idx,:), 'filled');
+       scatter(peer_cell(predict_x), y_idx, 4, colors(color_idx,:), 'filled');
        %xline(peer_cell(predict_x))
        hold on
        xlim([time_plot time_plot+1]);

@@ -102,7 +102,7 @@ legend('Peer Activity Alone', 'Peer Activity + Velocity');
 
 %% Weighted Raster Plot
 % DEFINE Target Cell and Second to plot on graph
-    target_cell = 20;
+    target_cell = 2;
     time_plot = 200; 
 % Load spiking data
     cd(data_path)
@@ -111,14 +111,18 @@ Weighted_Raster_Asmb(spikes, weights, target_cell, time_plot, optimal_win, winRa
 
 %% Weights by Firing Rate
 % Define a target cell
-    target_cell = 10;
+    target_cell = itar;
 % Load Spiking data
     cd(data_path);
     load([session_name '.spikes.cellinfo.mat']);
+    
+    %add in R=corrcoef(X,Y) R_squared=R(2)^2 scatter(X,Y)
+    
 FiringRate_Weights_Scatter(target_cell, optimal_win, winRange, spikes, weights)
 %% Raster sorted by weight and colored by firing rate
+   figure
 % DEFINE Target Cell and Second to plot on graph
-    target_cell = 20;
+    target_cell = 5;
     time_plot = 200; 
 % Load spiking data
     cd(data_path)
