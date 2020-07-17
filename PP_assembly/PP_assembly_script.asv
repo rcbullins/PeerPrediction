@@ -102,7 +102,7 @@ legend('Peer Activity Alone', 'Peer Activity + Velocity');
 
 %% Weighted Raster Plot
 % DEFINE Target Cell and Second to plot on graph
-    target_cell = 1;
+    target_cell = 2;
     time_plot = 200; 
 % Load spiking data
     cd(data_path)
@@ -111,47 +111,31 @@ Weighted_Raster_Asmb(spikes, weights, target_cell, time_plot, optimal_win, winRa
 
 %% ScatterPlot : Weights by Firing Rate
 % Define a target cell
-    target_cell = 10;
+ for target_cell = 1:9
+     subplot(3,3,target_cell);
+    %target_cell = 2;
 % Load Spiking data
     cd(data_path);
     load([session_name '.spikes.cellinfo.mat']);
+    
 FiringRate_Weights_Scatter(target_cell, optimal_win, winRange, spikes, weights)
-
+ end
 %% Distribution Graph of R^squared values for firing rate vs weight for every cell
 
-bin_win_count = .05;
+bin_win_count = 1;
 % Load spiking data
     cd(data_path)
     load([session_name '.spikes.cellinfo.mat']);
 
-[R_squared_values, mean_weight_values] = RSqr_FiringRate_Weights(spikes, weights, optimal_win, winRange, bin_win_count)
+[R_squared_values] = RSqr_FiringRate_Weights(spikes, weights, optimal_win, winRange, bin_win_count)
 
 %% Raster sorted by weight and colored by firing rate
-    figure
+   figure
 % DEFINE Target Cell and Second to plot on graph
-    target_cell = 4;
-    time_plot = 5000; 
+    target_cell = 5;
+    time_plot = 200; 
 % Load spiking data
     cd(data_path)
     load([session_name '.spikes.cellinfo.mat']);
 
 Weighted_Raster_FiringRate(spikes, weights, target_cell, time_plot, optimal_win, winRange)
-
-%% Scatter R2 X FR
-firing_rate = zeros(length(optimal_win));
-for icell = 1:length(optimal_win)
-num_spk = length(spikes.times{icell});
-length_time = spikes.times{icell}(length(spikes.times{icell})) - spikes.times{icell}(1);
-firing_rate(icell) = num_spk/length_time;
-end
-plot(firing_rate, R_squared_values, 'ob');
-xlabel('Firing Rate (spk/s)')
-ylabel('R Squared')
-title('All Cells: Firing Rate x R Squared')
-
-%% Scatter R2 X average(Abs(Weight))
-
-plot(mean_weight_values, R_squared_values, 'ob');
-xlabel('Mean Absolute Value of Peer Cell Weights')
-ylabel('R Squared')
-title('All Cells: Peer Weight X R Squared')

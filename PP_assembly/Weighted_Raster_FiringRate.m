@@ -59,10 +59,10 @@ function [] = Weighted_Raster_FiringRate(spikes, weights, target_cell, time_plot
 
     %want to order colors by firing rate
     firing_rate = zeros(length(sorted_weights), 2);
-    max_time = max(cellfun(@max,spikes.times));
     for icell = 1:length(sorted_weights)
+        length_time = spikes.times{sorted_weights(icell,1)}(length(spikes.times{sorted_weights(icell,1)})) - spikes.times{sorted_weights(icell,1)}(1);
         num_spikes = length(spikes.times{sorted_weights(icell,1)});
-        firing_rate(icell, 2) = num_spikes/max_time;
+        firing_rate(icell, 2) = num_spikes/length_time;
         firing_rate(icell, 1) = sorted_weights(icell, 1);
     end
     sorted_FR = sortrows(firing_rate,2);
