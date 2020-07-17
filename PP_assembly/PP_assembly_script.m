@@ -21,7 +21,8 @@
     addpath(genpath([basepath 'buzcode-dev\']));
 %% Defining Specifications
 
-winRange = [0.002, 0.004, 0.008, 0.016, 0.032, 0.064, 0.128, 0.256, 0.512, 1.024];
+winRange = [0.002, 0.004, 0.008, 0.016, 0.032, 0.064, 0.128, 0.256, 0.512, 1.024]; %RSC assmb log
+%winRange = [0.001, 0.002, 0.004, 0.008, 0.016, 0.032, 0.064, 0.128, 0.256, 0.512, 1.024]; %HPC LOG Base
  %winRange = [.001 .002:.002:.2]
  
 %% Run Script
@@ -138,16 +139,12 @@ bin_win_count = .05;
 Weighted_Raster_FiringRate(spikes, weights, target_cell, time_plot, optimal_win, winRange)
 
 %% Scatter R2 X FR
-firing_rate = zeros(length(optimal_win));
+firing_rate = zeros(length(optimal_win),1);
 for icell = 1:length(optimal_win)
 num_spk = length(spikes.times{icell});
 length_time = spikes.times{icell}(length(spikes.times{icell})) - spikes.times{icell}(1);
-firing_rate(icell) = num_spk/length_time;
+firing_rate(icell,1) = num_spk/length_time;
 end
-plot(firing_rate, R_squared_values, 'ob');
-xlabel('Firing Rate (spk/s)')
-ylabel('R Squared')
-title('All Cells: Firing Rate x R Squared')
 
 %% Scatter R2 X average(Abs(Weight))
 
@@ -155,3 +152,5 @@ plot(mean_weight_values, R_squared_values, 'ob');
 xlabel('Mean Absolute Value of Peer Cell Weights')
 ylabel('R Squared')
 title('All Cells: Peer Weight X R Squared')
+R = corrcoef(mean_weight_values,R_squared_values);
+R_squared_Weight_Scatter = R(2)^2;
