@@ -7,13 +7,13 @@
 %Add Basepath for all code and data used
     basepath = ('C:\Users\rcbul\Documents\English Lab\');
 %Define Recording Session Name
-    session_name = 'm115_191203_152410_n';
-    %session_name = 'u19_200313_155505';
+    %session_name = 'm115_191203_152410_n';
+    session_name = 'u19_200313_155505';
 %Deine DataPath that contains list of session names;
     data_path = [basepath 'PP_RSC_Data\' session_name];
 % Define dataset to load/folder name
-    folder_name = '\Assembly_binLog\';
-    %folder_name = '\Log_Baseline\';
+    %folder_name = '\Assembly_binLog\';
+    folder_name = '\Log_Baseline\';
     %folder_name = '\No_IN\';
     %folder_name = '\Velocity_Baseline\';
 %Define ResultPath that contains results from assembly function
@@ -81,9 +81,9 @@ optimal_win_graph = optimal_win *1000; %make s to ms
 %% Histogram COMBO: multiple overlays of histograms for different data set
 bin_win_count = 5; 
 optimal_win1 = hpc_base_optimal;
-optimal_win2 = rsc_optimal;
+optimal_win2 = hpc_noIN_optimal;
 winRange1 = winRangeBase;
-winRange2 = rsc_winRange;
+winRange2 = winRangeNoIN;
 
 winRange_graph1 = winRange1 *1000; %make in ms
 bin_win_max = winRange_graph1(length(winRange1));
@@ -151,7 +151,7 @@ Weighted_Raster_Asmb(spikes, weights, target_cell, time_plot, optimal_win, winRa
     load([session_name '.spikes.cellinfo.mat']);
 FiringRate_Weights_Scatter(target_cell, optimal_win, winRange, spikes, weights)
 
-%% Distribution Graph of R values for firing rate vs weight for every cell
+%% Distribution Graph of R^squared values for firing rate vs weight for every cell
 
 bin_win_count = .05;
 % Load spiking data
@@ -179,23 +179,19 @@ length_time = spikes.times{icell}(length(spikes.times{icell})) - spikes.times{ic
 firing_rate(icell,1) = num_spk/length_time;
 end
 plot(firing_rate(:,1), R_squared_values, 'ob');
-hold on
 xlabel('Firing Rate spk/s')
 ylabel('R Squared')
 title('All Cells: Firing Rate X R Squared')
+
+txt_fr = (['R = ' num2str(R_squared_FR_Scatter)])
 R = corrcoef(firing_rate(:,1),R_squared_values);
 R_squared_FR_Scatter = R(2)^2;
-txt_fr = (['R = ' num2str(R_squared_FR_Scatter)]);
-text(max(firing_rate(:,1))*.75, max(R_squared_values),txt_fr)
 
 %% Scatter R2 X average(Abs(Weight))
 
 plot(mean_weight_values, R_squared_values, 'ob');
-hold on
 xlabel('Mean Absolute Value of Peer Cell Weights')
 ylabel('R Squared')
-title({'All Cells: Peer Weight X R Squared'; 'HPC No Interneurons'})
+title('All Cells: Peer Weight X R Squared')
 R = corrcoef(mean_weight_values,R_squared_values);
 R_squared_Weight_Scatter = R(2)^2;
-txt_w = (['R = ' num2str(R_squared_Weight_Scatter)]);
-text(max(mean_weight_values)*.75, max(R_squared_values),txt_w)

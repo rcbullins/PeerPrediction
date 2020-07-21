@@ -1,4 +1,4 @@
-function [R_squared, avg_abs_weight] = RSqr_FiringRate_Weights(spikes, weights, optimal_win, winRange, bin_win_count)
+function [R_squared, R_values, avg_abs_weight] = RSqr_FiringRate_Weights(spikes, weights, optimal_win, winRange, bin_win_count)
 
 %Purpose: Creates a histogram of R squared values for every cell against
 %its peer cells, for firing rate vs weight. 
@@ -12,6 +12,7 @@ function [R_squared, avg_abs_weight] = RSqr_FiringRate_Weights(spikes, weights, 
 %%
 
 R_squared = zeros(length(optimal_win),1);
+R_values = zeros(length(optimal_win),1);
 avg_abs_weight = zeros(length(optimal_win),1);
 
 for target_cell = 1:length(optimal_win)
@@ -47,22 +48,23 @@ for target_cell = 1:length(optimal_win)
     
 %Get R Squared Value and fitted line
 R = corrcoef(firing_rate,sorted_weights(:,2));
+R_values(target_cell,1) = R(2);
 R_squared(target_cell,1) = R(2)^2
 avg_abs_weight(target_cell,1) = mean(abs(target_weights));
 end
 
 %%make histogram
 figure
-nbins = (0:bin_win_count:max(R_squared(:,1)));
+nbins = (-.5:bin_win_count:max(R_values(:,1)));
 %histogram(min_win, nbins)
-[counts_per_win, edges] = histcounts(R_squared(:,1), nbins)
+[counts_per_win, edges] = histcounts(R_values(:,1), nbins)
 histogram('BinEdges', edges, 'BinCounts', counts_per_win) %normalize??
-title('Histogram of R^2: |Weights| by Firing Rate')
-xlabel('R Squared')
+title('Histogram of R: |Weights| by Firing Rate')
+xlabel('R')
 ylabel('Count')
 hold on
-xline(median(R_squared(:,1)), 'k','LineWidth',1.5)
-txt2 = (['Median R Sqr = ' num2str(median(R_squared(:,1)))]);
+xline(median(R_values(:,1)), 'k','LineWidth',1.5)
+txt2 = (['Median R: ' num2str(median(R_values))])
 text(.4, max(counts_per_win)- 1, txt2)
 
 end
