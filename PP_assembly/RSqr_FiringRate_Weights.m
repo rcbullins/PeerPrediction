@@ -58,7 +58,7 @@ figure
 nbins = (-.5:bin_win_count:max(R_values(:,1)));
 %histogram(min_win, nbins)
 [counts_per_win, edges] = histcounts(R_values(:,1), nbins)
-histogram('BinEdges', edges, 'BinCounts', counts_per_win) %normalize??
+histogram('BinEdges', edges, 'BinCounts', counts_per_win, 'FaceColor', 'b', 'facealpha',.5)
 title('Histogram of R: |Weights| by Firing Rate')
 xlabel('R')
 ylabel('Count')
@@ -66,6 +66,9 @@ hold on
 xline(median(R_values(:,1)), 'k','LineWidth',1.5)
 txt2 = (['Median R: ' num2str(median(R_values))])
 text(.4, max(counts_per_win)- 1, txt2)
+
+
+
 
 end
 

@@ -59,7 +59,7 @@ hold on
 lc = lsline;
 lc.Color = 'r';
 yline(.25, '--');
-xlabel('Firing Rate (spikes/s)');
+xlabel('Firing Rate of Peer Cells (spikes/s)');
 ylabel('Abs Weights of Peer Cells');
 title({['Target Cell: ' num2str(target_cell)]; ['R^2 = ' num2str(R_squared) ' & FR = ' num2str(FR_tar) ' spk/s']});
 xlim([0 max(firing_rate(:,1))]);

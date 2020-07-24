@@ -14,6 +14,7 @@ function [spk_whole_epoch, spk_center_epoch] = spks_per_epoch(spikes, pulseEpoch
 %                            epoch begin and end times)
 % Created: 7/21/20 by Reagan Bullins
 
+
 %%
 % Create matrix num cells x num epochs, for the whole epoch
 spk_whole_epoch = zeros(length(spikes.times), length(pulseEpochs));
@@ -34,6 +35,87 @@ for icell = 1:length(spikes.times)
         spk_center_epoch(icell, iepoch) = length(spk_center_indexes);
     end
 end
+%% figure out consistency of firing
+
+        
+        whole_epoch_spk_percentage = zeros (length(spikes.times),1);
+        center_epoch_spk_percentage = zeros(length(spikes.times),1);
+        %make spike either 1 or 0 for yes there are spikes or no there isnt
+        spk_whole_iteration = spk_whole_epoch;
+        spk_center_iteration = spk_center_epoch;
+        spk_whole_iteration(spk_whole_iteration >= 1) = 1;
+        spk_center_iteration(spk_center_iteration >= 1) = 1;
+        
+        whole_epoch_spk_percentage = zeros(length(spikes.times),1);
+        center_epoch_spk_percentage = zeros(length(spikes.times),1);
+        
+        whole_epoch_spk_percentage = sum(spk_whole_iteration,2)/size(pulseEpochs,1)
+        center_epoch_spk_percentage = sum(spk_center_iteration,2)/size(pulseEpochs,1)
+  
+        %visualize percentage of epochs in
+        nbins = (0:.1:1)
+        [N, edges] = histcounts(whole_epoch_spk_percentage, nbins)
+        histogram('BinEdges', edges, 'BinCounts', N);
+        title('Whole Epoch Participation by cell')
+        xlabel('Percentage of Epoch Participation')
+        ylabel('Cell Count')
+        
+        %visualize percentage of epochs in
+        nbins = (0:.1:1)
+        [N, edges] = histcounts(center_epoch_spk_percentage, nbins)
+        histogram('BinEdges', edges, 'BinCounts', N);
+        title('Center Epoch Participation by cell')
+        xlabel('Percentage of Epoch Participation')
+        ylabel('Cell Count')
+%% heat map
+imagesc(spk_whole_epoch)
+
+imagesc(spk_center_epoch)
+
+%% wanna see by epoch number
+ct_per_whole_epoch = sum(spk_whole_iteration,1);
+ct_per_center_epoch = sum(spk_center_iteration,1);
+
+bar(1:843, ct_per_whole_epoch(1,:));
+title('Cell participation by epoch')
+ylabel('Number of Cells')
+xlabel('Epoch number');
+%% only interneurons
+          interN = [1 3 11 13 14 41 46 61]
+        for iIN = 1:length(interN)
+            spikesIN{iIN} = spikes.times{interN(iIN)};
+        end
+        whole_epoch_spk_percentage = zeros (length(spikesIN),1);
+        center_epoch_spk_percentage = zeros(length(spikesIN),1);
+        %make spike either 1 or 0 for yes there are spikes or no there isnt
+        spk_whole_iteration = spk_whole_epoch(interN,:);
+        spk_center_iteration = spk_center_epoch(interN,:);
+        spk_whole_iteration(spk_whole_iteration >= 1) = 1;
+        spk_center_iteration(spk_center_iteration >= 1) = 1;
+        
+        whole_epoch_spk_percentage = zeros(length(spikesIN),1);
+        center_epoch_spk_percentage = zeros(length(spikesIN),1);
+        
+        whole_epoch_spk_percentage = sum(spk_whole_iteration,2)/size(pulseEpochs,1)
+        center_epoch_spk_percentage = sum(spk_center_iteration,2)/size(pulseEpochs,1)
+  
+        %visualize percentage of epochs in
+        nbins = (0:.1:1)
+        [N, edges] = histcounts(whole_epoch_spk_percentage, nbins)
+        histogram('BinEdges', edges, 'BinCounts', N);
+        title({'Whole Epoch Participation by cell';'Interneurons'})
+        xlabel('Percentage of Epoch Participation')
+        ylabel('Cell Count')
+        
+        %visualize percentage of epochs in
+        nbins = (0:.1:1)
+        [N, edges] = histcounts(center_epoch_spk_percentage, nbins)
+        histogram('BinEdges', edges, 'BinCounts', N);
+        title({'Center Epoch Participation by cell';'Interneurons'})
+        xlabel('Percentage of Epoch Participation')
+        ylabel('Cell Count')
+        
+
 %% find how many times each cell fires all together in all epochs
        total_epoch_length = length(pulseEpochs) * .3; %in seconds 
        sum_center = sum(spk_center_epoch, 2);
