@@ -30,7 +30,7 @@ for target_cell = 1:length(optimal_win)
     target_weights(idx_nan) = [];
     idx_weights(idx_nan) = [];
 % Create matrix of indexes and corresponding weights for each peer cell
-    target_idx_mat = [idx_weights;abs(target_weights)]';
+    target_idx_mat = [idx_weights;abs(target_weights)]'; 
 % Sort the peer cells based on weights (most - to most +)
     sorted_weights = sortrows(target_idx_mat,2);
 % Get index of cells
@@ -57,16 +57,15 @@ end
 figure
 nbins = (-.5:bin_win_count:max(R_values(:,1)));
 %histogram(min_win, nbins)
-[counts_per_win, edges] = histcounts(R_values(:,1), nbins)
-histogram('BinEdges', edges, 'BinCounts', counts_per_win, 'FaceColor', 'b', 'facealpha',.5)
+[counts_per_win, edges] = histcounts(R_values(IN_index,1), nbins)
+histogram('BinEdges', edges, 'BinCounts', counts_per_win, 'FaceColor', 'r', 'facealpha',.5)
 title('Histogram of R: |Weights| by Firing Rate')
 xlabel('R')
 ylabel('Count')
 hold on
-xline(median(R_values(:,1)), 'k','LineWidth',1.5)
-txt2 = (['Median R: ' num2str(median(R_values))])
-text(.4, max(counts_per_win)- 1, txt2)
-
+xline(median(R_values(pyram_idx,1)), 'k','LineWidth',1.5)
+txt2 = (['Median R: ' num2str(median(R_values(pyram_idx,1)))])
+text(-.4, max(counts_per_win)- 2, txt2, 'Color','b')
 
 
 

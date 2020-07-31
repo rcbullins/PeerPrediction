@@ -13,9 +13,10 @@
     data_path = [basepath 'PP_RSC_Data\' session_name];
 % Define dataset to load/folder name
     %folder_name = '\Assembly_binLog\'; %rsc
-    %folder_name = '\Log_Baseline\'; %hpc
+    folder_name = '\Log_Baseline\'; %hpc
     %folder_name = '\No_IN\';
-    folder_name = '\Velocity_Baseline\';
+    %folder_name = '\Velocity_Baseline\';
+    %folder_name = '\DiffTimes_and_filtered\10min_nofilt_allCells\'
 %Define ResultPath that contains results from assembly function
     result_data_path = [data_path folder_name];
     % result_data_path = [basepath 'PP_RSC_Data\Testing\velocityAssemb']
@@ -63,20 +64,21 @@ SetGraphDefaults;
 [optimal_win_ex, highest_log_value_ex] = Find_Optimal_Window_Assemb(log_velocity, winRange);
 
 %% Histogram of Optimal Time Windows
-bin_win_count = 1; 
 winRange_graph = winRange *1000; %make in ms
-bin_win_max = winRange_graph(length(winRange));
-bin_win_max = bin_win_max + bin_win_count;
 optimal_win_graph = optimal_win *1000; %make s to ms
 
-[optimal_window] = PP_TimeWindow_Histogram (bin_win_count, bin_win_max, optimal_win_graph); 
+[optimal_window] = PP_TimeWindow_Histogram (winRange_graph, optimal_win_graph); 
 
 %% Histogram cheat - aka bar graph with counts :)
+pyram_idx = [1:3 5:7 9:17 19 21 22 24 26:33] %RSC
+super_pyram_idx = [1:8 10 13 14]; %RSC of super unit index
+%pyram_idx = [2 4:10 12 15:40 42:45 47:60 62 63] %HPC
+%super_pyram_idx = [2 4 5 6 10:20 22 23 25:32 34 35]; %HPC of super unit index
 bin_win_count = 1; 
-optimal_win1 = hpc_base_optimal;
-optimal_win2 = optimal_win;
+optimal_win1 = optimal_win(pyram_idx,:);
+optimal_win2 = optimal_win(supergoodUnitQualIdx(super_pyram_idx,1),:);
 winRange1 = winRange;
-winRange2 = winRangeBase;
+winRange2 = winRange; 
 
 ct_per_win1 = zeros(1, length(winRange1));
 ct_per_win2 = zeros(1, length(winRange2));
@@ -91,10 +93,10 @@ bar(1:length(winRange1), ct_per_win1, 'FaceColor', 'b', 'facealpha',.5, 'edgecol
 hold on
 bar(1:length(winRange2), ct_per_win2, 'FaceColor', 'r', 'facealpha',.5, 'edgecolor', 'none');
 
-title('HPC vs RSC: Optimal Time Window Histogram');
+title('RSC: Optimal Time Window Histogram');
 ylabel('Count');
 xlabel('Log Scale Time Windows (ms)');
-legend('HPC', 'RSC');
+legend('Target Cells:PYR', 'Target Cells:Quality PYR');
 set(gca,'XTickLabel', [1 2 4 8 16 32 64 128 256 512 1024])
 
 med_opt1 = (['Median Window = ' num2str(median(optimal_win1)*1000)]);
@@ -118,7 +120,7 @@ optimal_win_graph2 = optimal_win2 *1000;
 Overlay_TimeWindow_Histogram(bin_win_count, bin_win_max, optimal_win_graph1, optimal_win_graph2); 
 %% predictability graph for a target cell
 
-target_cell = 2;
+target_cell = 4;
 
 plot(winRange*1000, log_likelihood(target_cell,:), 'k')
 hold on
@@ -132,22 +134,24 @@ xlim([0 winRange(length(winRange))*1000]);
 %legend('HPC: All Cells');
 
 %% Predictability plots for multiple dataset
-index_plot = [2 4:10 12 15:40 42:45 47:60 62 63] %only pyramidal cells
+pyram_idx = [2 4:10 12 15:40 42:45 47:60 62 63] %only hpc pyramidal cells
+winRange_idx = [1 2 3 5 9 17 23:27]
+log_1 = log_likelihood;
+log_2 = hpc_noIN_log(:,winRange_idx)
+optimal_win1 = optimal_win;
+optimal_win2 = hpc_noIN_optimal;
+winRange1 = winRange;
+winRange2 = winRange;
+index_plot = pyram_idx
 
-log_1 = hpc_base_log;
-log_2 = hpc_LOG_IN_log;
-optimal_win1 = hpc_base_optimal;
-optimal_win2 = hpc_LOG_IN_optimal;
-winRange1 = winRangeBase;
-winRange2 = hpc_LOG_IN_winrange;
-for icell = 1:63
+for icell = 1:10
 figure
 target_cell = icell;
 
 % plot first data set
-plot(winRange1*1000, log_1(index_plot(target_cell), :), 'k');
+plot(winRange1*1000, log_1(index_plot(target_cell), :), 'b');
 txt2 = (['Time Window = ' num2str(optimal_win1(index_plot(target_cell))*1000) ' ms']);
-text(300, max(log_1(index_plot(target_cell),:))-.02,txt2);
+text(300, max(log_1(index_plot(target_cell),:))-.02,txt2, 'Color','b');
 
 % plot second data set
 hold on
@@ -160,12 +164,12 @@ xlabel('Peer Prediction Timescale (ms)');
 ylabel('Log Likelihood'); % 'Predictability (bits s-1)'
 title(['HPC: Predictability for Cell:' num2str(target_cell)]); 
 %xlim([0 winRange(length(winRange))*1000]);
-legend('All Cells','Only Pyramidal');
-savefig([num2str(icell) '_Cell'])
+legend('PYR & IN','PYR');
+%savefig([num2str(icell) '_Cell'])
 end
 %% Weighted Raster Plot
 % DEFINE Target Cell and Second to plot on graph
-    target_cell = 1;
+    target_cell = 6;
     time_plot = 200; 
 % Load spiking data
     cd(data_path)
@@ -176,7 +180,7 @@ Weighted_Raster_Asmb(spikes, weights, target_cell, time_plot, optimal_win, winRa
 %plots the firing rate of each peer cell by the weight of that peer cell to
 %the target cell
 % Define a target cell
-    target_cell = 2
+    target_cell = 55
 % Load Spiking data
     cd(data_path);
     load([session_name '.spikes.cellinfo.mat']);
@@ -195,8 +199,8 @@ bin_win_count = .05;
 %% Raster sorted by weight and colored by firing rate
     figure
 % DEFINE Target Cell and Second to plot on graph
-    target_cell = 8;
-    time_plot = 202; 
+    target_cell = 55;
+    time_plot = 10; 
 % Load spiking data
     cd(data_path)
     load([session_name '.spikes.cellinfo.mat']);
@@ -210,41 +214,53 @@ num_spk = length(spikes.times{icell});
 length_time = spikes.times{icell}(length(spikes.times{icell})) - spikes.times{icell}(1);
 firing_rate(icell,1) = num_spk/length_time;
 end
-interN = [1 3 11 13 14 41 46 61]
+interN = [1 3 11 13 14 41 46 61] %hps u19
+super_inter_idx = interN %for hpc
 
-plot(firing_rate(:,1), R_squared_values, 'ob');
+plot(firing_rate(supergoodUnitQualIdx,1), R_squared_values(supergoodUnitQualIdx,1), 'ob');
+%plot(firing_rate(:,1), R_squared_values(:,1), 'ob');
 hold on
-plot(firing_rate(interN,1), R_squared_values(interN,1), 'or');
+plot(firing_rate(super_inter_idx,1), R_squared_values(super_inter_idx,1), 'or');
+%plot(firing_rate(interN,1), R_squared_values(interN,1), 'or');
 
 %adding pointers
-plot(firing_rate(2,1)+.6, R_squared_values(2,1), '<', 'MarkerFaceColor', 'b', 'MarkerEdgeColor','b');
-plot(firing_rate(13,1)+.6, R_squared_values(13,1), '<', 'MarkerFaceColor', 'r', 'MarkerEdgeColor', 'r');
+plot(firing_rate(55,1)+.6, R_squared_values(55,1), '<', 'MarkerFaceColor', 'b', 'MarkerEdgeColor','b');
+plot(firing_rate(1,1)+.6, R_squared_values(1,1), '<', 'MarkerFaceColor', 'r', 'MarkerEdgeColor', 'r');
 %labels
 xlabel('Target Cell Firing Rate spk/s')
 ylabel('R Squared')
 title({'Correlation of target cell firing rate';'to peer cell firing rate and weights'})
-R = corrcoef(firing_rate(:,1),R_squared_values);
+R = corrcoef(firing_rate(supergoodUnitQualIdx,1),R_squared_values(supergoodUnitQualIdx,1));
 R_squared_FR_Scatter = R(2)^2;
+R_p = corrcoef(firing_rate(pyram_super_idx,1),R_squared_values(pyram_super_idx,1));
+R_squared_p = R_p(2)^2;
 txt_fr = (['R = ' num2str(R_squared_FR_Scatter)]);
 text(max(firing_rate(:,1))*.75, max(R_squared_values),txt_fr)
+txt_p = (['R = ' num2str(R_squared_p)]);
+text(max(firing_rate(:,1))*.75, max(R_squared_values)-.05,txt_p, 'Color', 'b')
+
 legend('Pyramidal Cell','Interneuron')
 
 %% Scatter R2 X average(Abs(Weight))
-plot(mean_weight_values, R_squared_values, 'ob');
+plot(mean_weight_values(supergoodUnitQualIdx,1), R_squared_values(supergoodUnitQualIdx,1), 'ob');
 hold on
 %specify internuerons
 interN = [1 3 11 13 14 41 46 61]
 plot(mean_weight_values(interN,1), R_squared_values(interN,1), 'or');
 %specify pointers
-plot(mean_weight_values(2,1)+.05, R_squared_values(2,1), '<', 'MarkerFaceColor', 'b', 'MarkerEdgeColor','b');
-plot(mean_weight_values(13,1)+.05, R_squared_values(13,1), '<', 'MarkerFaceColor', 'r', 'MarkerEdgeColor', 'r');
+plot(mean_weight_values(55,1)+.05, R_squared_values(55,1), '<', 'MarkerFaceColor', 'b', 'MarkerEdgeColor','b');
+plot(mean_weight_values(1,1)+.05, R_squared_values(1,1), '<', 'MarkerFaceColor', 'r', 'MarkerEdgeColor', 'r');
 
 xlabel('Mean Absolute Value of Peer Cell Weights')
 ylabel('R Squared')
 title({'Correlation of target cell weights';'to peer cell firing rate and weights'})
 
-R = corrcoef(mean_weight_values,R_squared_values);
+R = corrcoef(mean_weight_values(supergoodUnitQualIdx,1),R_squared_values(supergoodUnitQualIdx,1));
 R_squared_Weight_Scatter = R(2)^2;
-txt_w = (['R = ' num2str(R_squared_Weight_Scatter)]);
+R_p = corrcoef(mean_weight_values(pyram_super_idx,1),R_squared_values(pyram_super_idx,1));
+R_squared_p = R_p(2)^2;
+txt_w = (['R^2 = ' num2str(R_squared_Weight_Scatter)]);
 text(max(mean_weight_values)*.75, max(R_squared_values),txt_w)
+txt_p = (['R^2 = ' num2str(R_squared_p)]);
+text(max(mean_weight_values)*.75, max(R_squared_values)-.05,txt_p, 'Color','b')
 legend('Pyramidal Cell','Interneuron')

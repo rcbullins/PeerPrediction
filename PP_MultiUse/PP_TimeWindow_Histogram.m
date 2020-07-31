@@ -30,9 +30,8 @@ title('Optimal Time Window Histogram');
 ylabel('Count');
 xlabel('Log Scale Time Windows (ms)');
 set(gca,'XTickLabel', [1 2 4 8 16 32 64 128 256 512 1024])
-
 med_opt1 = (['Median Window = ' num2str(median(min_win))]);
-text(.5, max(ct_per_win), med_opt1, 'Color', 'b');
+text(.5, max(ct_per_win), med_opt1, 'Color', 'r');
 
 optimal_window = median(min_win);
 %% old iteration
