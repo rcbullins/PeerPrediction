@@ -33,11 +33,12 @@ winRange = [0.001, 0.002, 0.004, 0.008, 0.016, 0.032, 0.064, 0.128, 0.256, 0.512
  
 %% Run Script
 % 
-% for iwin = 1:length(winRange)
-% [log_likelihood,weights] = CrossValidationAssemblyPrediction(spikes, 'dt', winRange(iwin), 'epoch', [0 4] [9 10]); % varargin if wanted
-% %save([num2str(winRange(iwin)) '_bn_VelMultiply.mat'], 'log_likelihood', 'weights','-v7.3');
-% end
-% 
+tic
+for iwin = 1 %:length(winRange)
+[log_likelihood,weights] = CrossValidationAssemblyPrediction(spikes, 'dt', winRange(iwin), 'epoch', [0 2400]); % varargin if wanted
+%save([num2str(winRange(iwin)) '_bn_VelMultiply.mat'], 'log_likelihood', 'weights','-v7.3');
+end
+toc
 % for ibin = 9
 %     [log_likelihood, weights, log_velocity] = CrossValidationAssemblyPrediction_ExtraPredict(spikes, velocities,'dt', winRange(ibin), 'epoch', [0 2400]);
 %     save([num2str(bin_list(ibin)) '_bn_asmb.mat'], 'log_likelihood', 'weights', 'log_velocity',  '-v7.3');
