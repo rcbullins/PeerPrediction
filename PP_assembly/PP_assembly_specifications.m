@@ -29,14 +29,31 @@
     % smooth downsampled data - averaging
     smooth_ds_pos = smoothdata(ds_analogin_pos);
     %plot for reference to see smoothing effect
-        plot(1:length(analogin.pos), analogin.pos, 'k');
-        hold on;
-        plot(1:30:length(analogin.pos), smooth_ds_pos(1,:));
-    
+%         plot(1:length(analogin.pos), analogin.pos, 'k');
+%         hold on;
+%         plot(1:30:length(analogin.pos), smooth_ds_pos(1,:));
+%     
     % find the difference in distance between consecutive points
-    diff_filtered_pos = diff(smooth_ds_pos);
-    vel_pos = diff_filtered_pos/.001;
-    above_move_thres = find(vel_pos(1,:) >= 1.5);
+    % first, convert the voltage to distance points
+    max_volt = max(smooth_ds_pos);
+    min_volt = min(smooth_ds_pos);
+    
+    smooth_ds_pos = round(smooth_ds_pos,3);
+    pos_convert = unique(smooth_ds_pos);
+    
+%     volt_diff = max_volt - min_volt;
+%     interval_size = volt_diff/circum_disk;
+
+    convert_ratio =  circum_disk/length(pos_convert);
+    pos_convert(1,:) = pos_convert;
+    pos_convert(2,:) = (0.001:convert_ratio:circum_disk); %think .001 works?... idk
+    
+    %WORK HERE::::need to say, whenever row 1 equals this, make it same index row 2
+    smooth_ds_pos_convert =  
+    
+    diff_filtered_pos = diff(smooth_ds_pos_convert);
+    vel_pos = diff_filtered_pos/.001; %cm/ms
+    above_move_thres = find(vel_pos(1,:) >= 1.5); %seemes to be too high
     plot(length(vel_pos(1,:)), vel_pos(1,:));
     
     
