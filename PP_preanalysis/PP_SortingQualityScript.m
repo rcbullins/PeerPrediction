@@ -8,11 +8,6 @@ resultsDirectory = 'C:\Users\rcbul\Documents\English Lab\PP_RSC_Data\m115_191203
 %% Set Graph Defaults Now
 SetGraphDefaults;
 
-%% 
-%hpc super pyram
-super_idx = [2 4 5 6 10:20 22 23 25:32 34 35]
-super_pyram = supergoodUnitQualIdx(super_idx,:)
-
 %% Plotting All Clusters from Function
     plot(unitQuality(:,1), contaminationRate(:,1), '.b');
     title('Cluster Quality');
@@ -23,19 +18,33 @@ super_pyram = supergoodUnitQualIdx(super_idx,:)
     plot(unitQuality(plot_these,1), contaminationRate(plot_these,1),'.r');
     legend('Units < 20 Isolation quality','Units >= 20 Isolation quality')
     
-    %Minus 1, 0 based
-    clusterIDs_f = clusterIDs_f - 1;
-    %%
+   
+    %% Find out what clusters are quality
+     %Minus 1, 0 based
+    clusterIDs_f = clusterIDs - 1;
+  
+    clusterIDs_p = spikes.UID;
     idx_units =  zeros(1, length(clusterIDs_p));
-       
+    
+    %find clusters from kilosort and manual sorted, if do not exist make it
+    %a NaN value
     for icluster = 1:length(clusterIDs_p) %manual sorted
-       idx_units(1,icluster) = find(clusterIDs_f == clusterIDs_p(icluster)); 
+        exist_cluster = find(clusterIDs_f == clusterIDs_p(icluster))
+        if ~isempty(exist_cluster)
+            idx_units(1,icluster) = find(clusterIDs_f == clusterIDs_p(icluster)); 
+        else
+             idx_units(1,icluster) = NaN; 
+        end
     end
-    
+    %Take out NaN values
+    idx_units = idx_units(~isnan(idx_units(1,:)));
+    %Find good quality clusters, then find the index for ones with quality
+    %over 20
     goodUnitQual = unitQuality(idx_units(1,:));
-    goodclusterIDs= clusterIDs_f(idx_units(1,:));
-    supergoodUnitQualIdx = find(goodUnitQual>=20);
+    goodclusterIDs= clusterIDs_f(idx_units(1,:)); %units on both manual and computer sorted
+    supergoodUnitQualIdx = find(goodUnitQual>=20); %units quality greater than 20 - is the idx in spikes struct
     
+    %% idk what this is lol
     gscount =0;
     GoodSpikes = {};
     for i = supergoodUnitQualIdx'

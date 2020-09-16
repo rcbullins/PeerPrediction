@@ -1,4 +1,4 @@
-function [optimal_window] = PP_TimeWindow_Histogram (winRange, min_win)
+function [optimal_window] = PP_TimeWindow_Histogram (winRange, min_win, session_name)
 %Purpose: To make a histogram of the optimal time windows for all cell
 %         pairs OR more specifically by the ones denoted from the previous
 %         functions -- PP_DevianceGraphs. The histogram will have the mode
@@ -26,10 +26,11 @@ for iwin = 1:length(winRange)
 end
 bar(1:length(winRange), ct_per_win, 'FaceColor', 'b', 'facealpha',.5, 'edgecolor', 'none');
 hold on
-title('Optimal Time Window Histogram');
+title('Optimal Time Window Histogram')
 ylabel('Count');
 xlabel('Log Scale Time Windows (ms)');
-set(gca,'XTickLabel', [1 2 4 8 16 32 64 128 256 512 1024])
+%set(gca,'XTickLabel', [1 2 4 8 16 32 64 128 256 512 1024])
+set(gca,'XTickLabel', [0 16 26 36 46 56 128])
 med_opt1 = (['Median Window = ' num2str(median(min_win))]);
 text(.5, max(ct_per_win), med_opt1, 'Color', 'r');
 
