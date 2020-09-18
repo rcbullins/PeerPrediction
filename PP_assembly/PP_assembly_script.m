@@ -83,8 +83,10 @@ optimal_win_graph = optimal_win *1000; %make s to ms
 [optimal_window] = PP_TimeWindow_Histogram (winRange_graph, optimal_win_graph, session_name); 
 
 %% Histogram Concat All Sessions - done with counts
-path_mat_files = 'C:\Users\rcbul\Documents\English Lab\PP_RSC_Data\matFilesOverall\log_fine_16_64';
-num_mat_files = [2 3 5 6];
+folder_name = 'log_fine_quality_16_64';
+
+path_mat_files = ['C:\Users\rcbul\Documents\English Lab\PP_RSC_Data\matFilesOverall\' folder_name];
+num_mat_files = [2 3 6];
 
 cd(path_mat_files)
 Concat_Sessions_OptHist(winRange, num_mat_files)

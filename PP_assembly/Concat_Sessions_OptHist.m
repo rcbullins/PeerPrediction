@@ -17,8 +17,8 @@ function [] = Concat_Sessions_OptHist(winRange, num_mat_files)
  optimal_win = {}
  optimal_win{1} = optimal_win2;
  optimal_win{2} = optimal_win3;
- optimal_win{3} = optimal_win5;
- optimal_win{4} = optimal_win6;
+ %optimal_win{3} = optimal_win5;
+ optimal_win{3} = optimal_win6;
 
 %% Count per session how many optimal windows per bin
     ct_per_win_mat = zeros(length(num_mat_files), length(winRange));
@@ -46,7 +46,7 @@ function [] = Concat_Sessions_OptHist(winRange, num_mat_files)
     %set(gca,'XTickLabel', [1 2 4 8 16 32 64 128 256 512 1024])
     set(gca,'XTickLabel', [0 16 26 36 46 56 128])
     
-    optimal_win_tot = [optimal_win{1}(:,1); optimal_win{2}(:,1); optimal_win{3}(:,1); optimal_win{4}(:,1)];
+    optimal_win_tot = [optimal_win{1}(:,1); optimal_win{2}(:,1); optimal_win{3}(:,1)] %; optimal_win{4}(:,1)];
     med_opt1 = (['Median Window = ' num2str(median(optimal_win_tot)*1000)]);
     text(.5, max(total_ct_per_win), med_opt1, 'Color', 'b');
 

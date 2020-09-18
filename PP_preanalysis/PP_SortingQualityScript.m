@@ -43,15 +43,19 @@ SetGraphDefaults;
     goodUnitQual = unitQuality(idx_units(1,:));
     goodclusterIDs= clusterIDs_f(idx_units(1,:)); %units on both manual and computer sorted
     supergoodUnitQualIdx = find(goodUnitQual>=20); %units quality greater than 20 - is the idx in spikes struct
+
+ %% Hist only super good units
     
+ 
+ 
     %% idk what this is lol
-    gscount =0;
-    GoodSpikes = {};
-    for i = supergoodUnitQualIdx'
-        gscount = gscount+1;
-        GoodSpikes{gscount} = spikes.times{i};
-    
-    end
-    plot(unitQuality(idx_units(1,:)), contaminationRate(idx_units(1,:)),'.r');
-    
+%     gscount =0;
+%     GoodSpikes = {};
+%     for i = supergoodUnitQualIdx'
+%         gscount = gscount+1;
+%         GoodSpikes{gscount} = spikes.times{i};
+%     
+%     end
+%     plot(unitQuality(idx_units(1,:)), contaminationRate(idx_units(1,:)),'.r');
+%     
     
