@@ -9,10 +9,10 @@
 %Define Recording Session Name
     %session_name = 'm115_191203_152410_n';
     %session_name = 'u19_200313_155505'; %NUM 1 -running
-    session_name = 'u19_200310_135409'; %NUM 2
+    %session_name = 'u19_200310_135409'; %NUM 2
     %session_name = 'u19_200313_120452'; %NUM 3
     %session_name = 'u21_200305_153604'; %NUM 4 -runninng
-    %session_name = 'u21_200309_142534'; %NUM 5
+    session_name = 'u21_200309_142534'; %NUM 5
     %session_name = 'u26_200306_172032'; %NUM 6
     
 %Deine DataPath that contains list of session names;
@@ -62,7 +62,7 @@ SetGraphDefaults;
 
 % Take Away zeros -- happens because some cells do not appear til later in
 % recording -CONSIDER how this could effect other graphs
-%log_likelihood = log_likelihood(any(log_likelihood,2),:);
+log_likelihood = log_likelihood(any(log_likelihood,2),:);
 
 %% Find optimal window for every cell
 
@@ -83,10 +83,11 @@ optimal_win_graph = optimal_win *1000; %make s to ms
 [optimal_window] = PP_TimeWindow_Histogram (winRange_graph, optimal_win_graph, session_name); 
 
 %% Histogram Concat All Sessions - done with counts
-folder_name = 'log_fine_quality_16_64';
+%folder_name = 'log_fine_quality_16_64';
+folder_name = 'log_fine_16_64'
 
 path_mat_files = ['C:\Users\rcbul\Documents\English Lab\PP_RSC_Data\matFilesOverall\' folder_name];
-num_mat_files = [2 3 6];
+num_mat_files = [1 2 3 5 6];
 
 cd(path_mat_files)
 Concat_Sessions_OptHist(winRange, num_mat_files)

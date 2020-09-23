@@ -15,10 +15,11 @@ function [] = Concat_Sessions_OptHist(winRange, num_mat_files)
 
 %% Put all optimal windows in an array
  optimal_win = {}
- optimal_win{1} = optimal_win2;
- optimal_win{2} = optimal_win3;
- %optimal_win{3} = optimal_win5;
- optimal_win{3} = optimal_win6;
+ optimal_win{1} = optimal_win1;
+ optimal_win{2} = optimal_win2;
+ optimal_win{3} = optimal_win3;
+ optimal_win{4} = optimal_win5;
+ optimal_win{5} = optimal_win6;
 
 %% Count per session how many optimal windows per bin
     ct_per_win_mat = zeros(length(num_mat_files), length(winRange));
@@ -26,8 +27,10 @@ function [] = Concat_Sessions_OptHist(winRange, num_mat_files)
   % for every session
     for isess = 1:length(num_mat_files)
       % for every window, count number of optimal time windows
-        for iwin = 1:length(winRange)
-            ct_per_win_mat(isess,iwin) = sum(optimal_win{isess}(:,1) == winRange(1,iwin));
+        if isempty(optimal_win{isess}) == 0 
+            for iwin = 1:length(winRange)
+                ct_per_win_mat(isess,iwin) = sum(optimal_win{isess}(:,1) == winRange(1,iwin));
+            end
         end
     end
 %% Sum columns together to get wholistic number of counts per bin
