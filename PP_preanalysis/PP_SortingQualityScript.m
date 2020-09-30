@@ -1,4 +1,5 @@
 %PP_sorting_quality_script
+%Quality and Inclusion Criteria -(firing rate)
 
 %% Cluster Quality
 %resultsDirectory = 'C:\Users\rcbul\Documents\English Lab\PP_RSC_Data\u19_200313_155505'
@@ -44,18 +45,16 @@ SetGraphDefaults;
     goodclusterIDs= clusterIDs_f(idx_units(1,:)); %units on both manual and computer sorted
     supergoodUnitQualIdx = find(goodUnitQual>=20); %units quality greater than 20 - is the idx in spikes struct
 
- %% Hist only super good units
+ %% Inclusion Criteria Pt II - Firing Rate of Cells
+ load([session_name '.spikes.cellinfo.mat']);
+ firing_rate = zeros(length(spikes.times),1);
+    for icell = 1:length(spikes.times)
+    num_spk = length(spikes.times{icell});
+    length_time = spikes.times{icell}(length(spikes.times{icell})) - spikes.times{icell}(1);
+    firing_rate(icell,1) = num_spk/length_time;
+    end
+ % need a threshold for what firing rate is a good one
+ %QUESTIION -- this does not mean consistency, how can i figure this out
+cell_idx_good_fr = find(firing_rate(:,1) > 1) %LOOK INTO THIS 
     
- 
- 
-    %% idk what this is lol
-%     gscount =0;
-%     GoodSpikes = {};
-%     for i = supergoodUnitQualIdx'
-%         gscount = gscount+1;
-%         GoodSpikes{gscount} = spikes.times{i};
-%     
-%     end
-%     plot(unitQuality(idx_units(1,:)), contaminationRate(idx_units(1,:)),'.r');
-%     
-    
+%% Now see what cells have BOTH good quality and consistent firing rate

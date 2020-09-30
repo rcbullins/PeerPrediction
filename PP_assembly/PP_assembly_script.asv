@@ -152,10 +152,9 @@ Weighted_Raster_FiringRate(spikes, weights, target_cell, time_plot, optimal_win,
 
 %% Scatter R2 X FR
 %same session (same cells) but split into different cell types
-dataset_idx1 = %pyram
-dataset_idx2 = %IN
+dataset_idx1 = 
+dataset_idx2 =
 Scatter_R2_by_FR(optimal_win, spikes, dataset_idx1, dataset_idx2);
 %% Scatter R2 X average(Abs(Weight))
-dataset_idx1 = %pyram
-dataset_idx2 = %IN
+dataset
 Scatter_R2_by_Weight(dataset_idx1, dataset_idx2, R_squared_values, mean_weight_values)

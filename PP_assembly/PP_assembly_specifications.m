@@ -4,11 +4,11 @@
     basepath = ('C:\Users\rcbul\Documents\English Lab\');
 %Define Recording Session Name
     %session_name = 'm115_191203_152410_n';
-    %session_name = 'u19_200313_155505'; %NUM 1 -running
+    session_name = 'u19_200313_155505'; %NUM 1 -running
     %session_name = 'u19_200310_135409'; %NUM 2
     %session_name = 'u19_200313_120452'; %NUM 3
     %session_name = 'u21_200305_153604'; %NUM 4 -runninng
-    session_name = 'u21_200309_142534'; %NUM 5
+    %session_name = 'u21_200309_142534'; %NUM 5
     %session_name = 'u26_200306_172032'; %NUM 6
 %Deine DataPath that contains list of session names;
     data_path = [basepath 'PP_RSC_Data\' session_name];
@@ -26,8 +26,8 @@
         rad_disk = 26; %cm
         circum_disk = 163.3628; %(2*pi*r) cm
         load([session_name '_analogin.mat']);
-    % downsample 30000 to 1000 :)
-        ds_analogin_pos = analogin.pos(1:30:length(analogin.pos));
+    % downsample 30000ms to 1 second (oh yes)
+        ds_analogin_pos = analogin.pos(1:30000:length(analogin.pos)); %analogin once every second
         
                 %plot for reference to see downsampling effect
             %          plot(1:length(analogin.pos), analogin.pos, 'k');
@@ -68,17 +68,23 @@
     % calculate velocity 
         %units depends on downsampled (if to 1000 per second, this is
         %cm/ms)
-        vel_pos = diff_filtered_pos; 
-  %_______________________________________________________________________
-        %HELP vel_pos = vel_pos * 1000; % cm/s (multiply by 1000)--this might be wrong ...
-          % ^^^ might need to downsample vs multiplying????? _HELP_
-  %_______________________________________________________________________
+        vel_pos = diff_filtered_pos; %cm diff per second
+    % smooth velocity
+  % ________________________________________________________________
+        smth_vel_pos = smoothdata(vel_pos, 'sgolay', 60) 
+        smth_vel1 = smoothdata(vel_pos, 'movmean',10)
+        smth_vel2 = smoothdata(vel_pos, 'movmean',30)
+        smth_vel3 = smoothdata(vel_pos,'movmean',60)
+  %__________________________________________________________________
     % find velocity above arbitrary moving threshold
         above_move_thres = find(vel_pos(1,:) >= 1.5); 
+   
         %see how long in total there is movement
         move_tot_sec = length(above_move_thres)/1000 %i think?? need this divide
-        plot(length(vel_pos(1,:)), vel_pos(1,:));
+        plot(length(vel_pos(1,1000)), vel_pos(1,1000));
 
-    histogram(vel_pos)
+        histogram(vel_pos)
+ %% Find Epochs of running vs not running
+      
     
     
