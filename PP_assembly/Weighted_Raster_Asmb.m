@@ -5,9 +5,15 @@ function [] = Weighted_Raster_Asmb(spikes, weights, target_cell, time_plot, opti
     %cell raster plots ordered on the y-axis by weights. Below the black line
     %will be negative weighted cell activity, and above the black line will be
     %positive weighted cell activity.
-%Inputs:
-%Outputs:
-%Dependencies:
+%Inputs: spikes (spikes struct)
+%        weights (given by CrossValidationAssemblyPrediction function)
+%        target cell (defined by user)
+%        time_polt (this is the actual second of the recording to be plotted)
+%        optimal_win (optimal window per cell)
+%        winRange (bin sizes)
+%Outputs: raster plot ordered by magnituded of weight of peer cell
+%Dependencies: crossValidationAssemblyPrediction
+
 %Created 7/7/20 by Reagan Bullins
 
 %%

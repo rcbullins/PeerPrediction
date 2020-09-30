@@ -31,8 +31,8 @@
 %           winRange
 
 %% Temporary for Test running code
-%winRange = [1 2 4 8 16 32 64 128 256]; %add 0
-winRange = [1:150];
+winRange = [1 2 4 8 16 32 64 128 256 512 1024]; %add 0
+%winRange = [1:150];
 tic
 [dev devControl] = bz_peerPredictionRB(binned_spikes(:,1,:),winRange,[],pairsToRun(300,:));
 disp('Done')
@@ -52,11 +52,13 @@ toc
     addpath(genpath(basepath));
 %Define Recording Session Name
     session_name = 'm115_191203_152410_n';
+    %session_name = 'u19_200313_155505';
 %Deine DataPath that contains list of session names;
     data_path = [basepath 'PP_RSC_Data\' session_name];
 %Define ResultPath that contains results from peer prediction function
     data_set = 'PeerPrediction_binLog';
     %data_set = 'PeerPrediction_bin2';
+    %data_set = 'Buzcode'
     result_data_path = [data_path '\' data_set '\'];
 %Result data format:NORMAL OR POISSON
     %data_format = 'pp_batch' ;
@@ -77,6 +79,7 @@ toc
         %winRange = [1:2:64]; %bin2
          %winRange = [1 2:2:10 12:1:64 66:4:82]; %mixLog
         %winRange = [1:1:70]; %1to70
+        %winRange = [2 4 16 32 64 128 256 512 1024]
   
 %% Graphing Defaults
 SetGraphDefaults;
@@ -110,18 +113,15 @@ end
 PP_DevianceGraphs(dev, dev_smoothed, devControl, dev_min, ratio_strength, choice_graphPairs, winRange);
 
 %% Histogram of Optimal Time Windows : ALL
-bin_win_count = 1; %binned within 3 ms time windows -- CAN adjust
-bin_win_max = winRange(length(winRange));
-bin_win_max = bin_win_max + bin_win_count;
 
-[optimal_window] = PP_TimeWindow_Histogram (bin_win_count, bin_win_max, min_win_total); %optimal window is median
+[optimal_window] = PP_TimeWindow_Histogram (winRange, min_win_total'); %optimal window is median
 
 %% Histogram of Optimal Time Windows: Analysis Specifications
-bin_win_count = 1; %binned within 3 ms time windows -- CAN adjust
-bin_win_max = winRange(length(winRange)); % CAN adjust 
-bin_win_max = bin_win_max + bin_win_count;
+% bin_win_count = 1; %binned within 3 ms time windows -- CAN adjust
+% bin_win_max = winRange(length(winRange)); % CAN adjust 
+% bin_win_max = bin_win_max + bin_win_count;
 
-[optimal_window] = PP_TimeWindow_Histogram (bin_win_count, bin_win_max, min_win_pairs); %optimal window is median
+[optimal_window] = PP_TimeWindow_Histogram (winRange, min_win_pairs'); %optimal window is median
 
 %% Histogram of Assembly Strength
 

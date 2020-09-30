@@ -1,5 +1,7 @@
 function [smoothedTrains] = PP_Raster_SmoothedTrains(choice_graphPairs,choice_sec, binned_spikes, pairsToRun, spikes, win_num)
-%Purpose: Create cross correlograms for specified pairs.
+%Purpose: Create a raster plot to compare a target cell to a comparison
+%         cell/predictor. Then show spiking probability in
+%         smoothed trains for different prediction windows. 
 
 %Dependencies: Buzcode
 %              Paths set in beggining of PP_Analyzing_Script

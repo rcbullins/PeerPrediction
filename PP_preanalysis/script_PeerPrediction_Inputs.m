@@ -62,6 +62,8 @@ for iSess = 1:length(sessions)
     % Get analogin values
     if contains(selecSession,'m1_181220_151127')
         parameters.analoginCh.pulse = 1;
+    elseif contains(basename, 'u21') || contains(basename, 'u19') || contains(basename, 'u26')
+        parameters.analoginCh.pulse = 4;
     else
         parameters.analoginCh.pulse = 7;
     end

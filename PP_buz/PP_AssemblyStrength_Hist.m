@@ -21,8 +21,9 @@ function [] = PP_AssemblyStrength_Hist (ratio_strength,bin_interval)
 figure
 bin_win_count_ratio = bin_interval;
 nbins = (1:bin_win_count_ratio:max(ratio_strength))
-histogram(ratio_strength, nbins)
 [counts_per_win, edges] = histcounts(ratio_strength, nbins)
+histogram('BinEdges', edges, 'BinCounts', counts_per_win);
+
 title('Assembly Strength')
 xlabel('Assembly Strength')
 ylabel('Frequency')
