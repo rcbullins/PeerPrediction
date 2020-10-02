@@ -46,6 +46,8 @@ winRange = [.001 .002 .004 .008 .016:.002:.064 .128 .256 .512 1.024]; %fine_log_
 % end
 % toc
 
+% CrossValidationAssemblyPrediction_Epochs (to give epochs)
+
 % for ibin = 9
 %     [log_likelihood, weights, log_velocity] = CrossValidationAssemblyPrediction_ExtraPredict(spikes, velocities,'dt', winRange(ibin), 'epoch', [0 2400]);
 %     save([num2str(bin_list(ibin)) '_bn_asmb.mat'], 'log_likelihood', 'weights', 'log_velocity',  '-v7.3');
