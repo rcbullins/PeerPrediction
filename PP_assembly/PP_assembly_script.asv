@@ -17,8 +17,9 @@
 %Deine DataPath that contains list of session names;
     data_path = [basepath 'PP_RSC_Data\' session_name];
 % Define dataset to load/folder name
-     folder_name = '\log_fine_16_64\';
+     %folder_name = '\log_fine_16_64\';
     %folder_name = '\Assembly_binLog\'; %rsc
+     folder_name = '\Pulse_Epoch\';
     %folder_name = '\Log_Baseline\'; %hpc
     %folder_name = '\No_IN\';
     %folder_name = '\Velocity_Baseline\';
@@ -45,6 +46,8 @@ winRange = [.001 .002 .004 .008 .016:.002:.064 .128 .256 .512 1.024]; %fine_log_
 % %save([num2str(winRange(iwin)) '_bn_VelMultiply.mat'], 'log_likelihood', 'weights','-v7.3');
 % end
 % toc
+
+% CrossValidationAssemblyPrediction_Epochs (to give epochs)
 
 % for ibin = 9
 %     [log_likelihood, weights, log_velocity] = CrossValidationAssemblyPrediction_ExtraPredict(spikes, velocities,'dt', winRange(ibin), 'epoch', [0 2400]);
@@ -152,9 +155,10 @@ Weighted_Raster_FiringRate(spikes, weights, target_cell, time_plot, optimal_win,
 
 %% Scatter R2 X FR
 %same session (same cells) but split into different cell types
-dataset_idx1 = 
-dataset_idx2 =
+dataset_idx1 = %pyram
+dataset_idx2 = %IN
 Scatter_R2_by_FR(optimal_win, spikes, dataset_idx1, dataset_idx2);
 %% Scatter R2 X average(Abs(Weight))
-dataset
+dataset_idx1 = %pyram
+dataset_idx2 = %IN
 Scatter_R2_by_Weight(dataset_idx1, dataset_idx2, R_squared_values, mean_weight_values)

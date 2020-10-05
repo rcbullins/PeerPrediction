@@ -17,8 +17,9 @@
 %Deine DataPath that contains list of session names;
     data_path = [basepath 'PP_RSC_Data\' session_name];
 % Define dataset to load/folder name
-     folder_name = '\log_fine_16_64\';
+     %folder_name = '\log_fine_16_64\';
     %folder_name = '\Assembly_binLog\'; %rsc
+     folder_name = '\Pulse_Epoch\';
     %folder_name = '\Log_Baseline\'; %hpc
     %folder_name = '\No_IN\';
     %folder_name = '\Velocity_Baseline\';
@@ -45,6 +46,8 @@ winRange = [.001 .002 .004 .008 .016:.002:.064 .128 .256 .512 1.024]; %fine_log_
 % %save([num2str(winRange(iwin)) '_bn_VelMultiply.mat'], 'log_likelihood', 'weights','-v7.3');
 % end
 % toc
+
+% CrossValidationAssemblyPrediction_Epochs (to give epochs)
 
 % for ibin = 9
 %     [log_likelihood, weights, log_velocity] = CrossValidationAssemblyPrediction_ExtraPredict(spikes, velocities,'dt', winRange(ibin), 'epoch', [0 2400]);
