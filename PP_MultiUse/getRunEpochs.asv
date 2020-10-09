@@ -11,7 +11,7 @@ thr = 10;% minRun/dt;
 % runBins = find(vel_cm_s > thr);
 % 
 %  for iRun = 1:length(runBins)-1
-%      logicRb(iRun) =  runBins(iRun) == runBins(iRun+1)-1; %dit gaat mis?
+%      logicRb(iRun) =  runBins(iRun) == runBins(iRun+1)-1; %this is going wrong?
 %      
 %  end
  logicRb = vel_cm_s > thr;
@@ -20,8 +20,13 @@ thr = 10;% minRun/dt;
  diff_Rb = diff(logicRb);%this is not correct alaways goes from -1 directly to 1 
  % what if recording starts running: startIdx = first timestamp
  
+ %% finding start and stop of running epochs
  runStartIdx = find(diff_Rb==1)+1;
  runStopIdx = find(diff_Rb==-1)+1;
+ 
+ %make into matrix
+ runStartStop(:,1) = runStartIdx
+ run
  
  StartorStop = diff_Rb(diff_Rb~=0);
  if diff_Rb(1) == 0 && StartorStop(1) == -1
@@ -35,7 +40,7 @@ thr = 10;% minRun/dt;
  runEpochs = [time(runStartIdx)' time(runStopIdx)'];
 end
 
- % als dier niet gestopt is met rennen aan het einde recording: stopIdx =
+ % if animal has not stopped running at the end of recording: stopIdx =
  % last timestamp
  
  
