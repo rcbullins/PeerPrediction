@@ -1,5 +1,5 @@
-function [runEpochs, runIdx] = getRunEpochs(vel_cm_s, dt, minRun, time);
-
+function [runEpochs, runIdx] = getRunEpochs(vel_cm_s, dt,time);
+%can add minRun as input - Reagan
 %something is going wrong, because runepochs do not span entire recording
 % check with Reagan! 
 

@@ -31,11 +31,7 @@
  %% Find Epochs of running vs not running
     [runEpochs, runIdx] = getRunEpochs(vel_cm_s, dt, time)
     
-    total_time_run = 0
-    for i = 1:159 %hard coded
-        int_row = runEpochs(i,2) - runEpochs(i,1);
-        total_time_run = total_time_run + int_row
+    for i = 1:size(runEpochs,1)
+    total_time_run = total_time_run + int_row
     end
-    total_time_min = total_time_run /60; %28min running out of baseline 40 min
-    
     
