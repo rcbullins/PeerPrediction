@@ -1,5 +1,5 @@
-function [runEpochs, runIdx] = getRunEpochs(vel_cm_s, dt, minRun, time);
-
+function [runEpochs, runIdx] = getRunEpochs(vel_cm_s, dt,time);
+%can add minRun as input - Reagan
 %something is going wrong, because runepochs do not span entire recording
 % check with Reagan! 
 
@@ -20,6 +20,7 @@ thr = 10;% minRun/dt;
  diff_Rb = diff(logicRb);%this is not correct alaways goes from -1 directly to 1 
  % what if recording starts running: startIdx = first timestamp
  
+ %% finding start and stop of running epochs
  runStartIdx = find(diff_Rb==1)+1;
  runStopIdx = find(diff_Rb==-1)+1;
  
@@ -31,6 +32,14 @@ thr = 10;% minRun/dt;
      runStopIdx=  [runStopIdx length(logicRb)];
  end
  
+ %%_____Reagan______________
+    if length(runStartIdx) > length(runStopIdx)
+          %runStartIdx(end) = [];   %% Just get rid of 
+          %OR: Stop at end of recording,
+           runStopIdx(end+1) = max(time);
+    end
+ %___________________________
+  
  runIdx = [runStartIdx' runStopIdx'];
  runEpochs = [time(runStartIdx)' time(runStopIdx)'];
 end

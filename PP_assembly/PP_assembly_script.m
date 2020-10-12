@@ -19,11 +19,9 @@
 % Define dataset to load/folder name
      %folder_name = '\log_fine_16_64\';
     %folder_name = '\Assembly_binLog\'; %rsc
-     folder_name = '\Pulse_Epoch\';
-    %folder_name = '\Log_Baseline\'; %hpc
-    %folder_name = '\No_IN\';
-    %folder_name = '\Velocity_Baseline\';
-    %folder_name = '\DiffTimes_and_filtered\10min_nofilt_allCells\'
+     %folder_name = '\Pulse_Epoch\';
+     %folder_name = '\Pulse_Epoch_Baseline\';
+     folder_name = '\Epoch_Length_2000ms\'
 %Define ResultPath that contains results from assembly function
     result_data_path = [data_path folder_name];
     % result_data_path = [basepath 'PP_RSC_Data\Testing\velocityAssemb']
@@ -42,7 +40,7 @@ winRange = [.001 .002 .004 .008 .016:.002:.064 .128 .256 .512 1.024]; %fine_log_
 % 
 % tic
 % for iwin = 1 %:length(winRange)
-% [log_likelihood,weights] = CrossValidationAssemblyPrediction(spikes, 'dt', winRange(iwin), 'epoch', [0 2400]); % varargin if wanted
+% [log_likelihood,weights] = CrossValidationAssemblyPrediction(spikes, 'dt', bin_list(iwin), 'epoch', epochruntrial1, 'cell', [1]); % varargin if wanted
 % %save([num2str(winRange(iwin)) '_bn_VelMultiply.mat'], 'log_likelihood', 'weights','-v7.3');
 % end
 % toc
@@ -55,6 +53,15 @@ winRange = [.001 .002 .004 .008 .016:.002:.064 .128 .256 .512 1.024]; %fine_log_
 %     clear log_likelihood weights log_velocity
 % end
 
+%% making epochs
+% epochRun = zeros(1200,2);
+% numel(.001:2:2400)
+% count = 1;
+% for i = .001:2:2400
+%    epochRun(count,1) = i;
+%    epochRun(count,2) = epochRun(count,1)+1;
+%    count = count +1;
+% end
 %% Set Graph Defaults Now
 SetGraphDefaults;
 
