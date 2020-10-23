@@ -18,10 +18,17 @@
     data_path = [basepath 'PP_RSC_Data\' session_name];
 % Define dataset to load/folder name
      %folder_name = '\log_fine_16_64\';
-    %folder_name = '\Assembly_binLog\'; %rsc
+     %folder_name = '\Assembly_binLog\'; %rsc
      %folder_name = '\Pulse_Epoch\';
      %folder_name = '\Pulse_Epoch_Baseline\';
-     folder_name = '\Epoch_Length_2000ms\'
+     %folder_name = '\Epoch_Length_2000ms\'
+     %folder_name = '\Epoch_300ms_20min\'
+     %folder_name = '\Test_Epoch_Code\'
+     %folder_name = '\Control_Epoch_4min\'
+     %folder_name = '\Epoch_2000ms_20min\'
+     %folder_name = '\Baseline_Moving_Epochs\' %hpc 155505
+     folder_name = '\Baseline_Moving_Epochs_Greater4s\'
+      %folder_name = '\Epoch_1000ms_4min_aligned\'
 %Define ResultPath that contains results from assembly function
     result_data_path = [data_path folder_name];
     % result_data_path = [basepath 'PP_RSC_Data\Testing\velocityAssemb']
@@ -33,7 +40,7 @@
 %% Defining Specifications
 winRange = [.001 .002 .004 .008 .016:.002:.064 .128 .256 .512 1.024]; %fine_log_16_64
 %winRange = [0.002, 0.004, 0.008, 0.016, 0.032, 0.064, 0.128, 0.256, 0.512, 1.024]; %RSC assmb log
-%winRange = [0.001, 0.002, 0.004, 0.008, 0.016, 0.032, 0.064, 0.128, 0.256, 0.512, 1.024]; %HPC LOG Base
+ %winRange = [0.001, 0.002, 0.004, 0.008, 0.016, 0.032, 0.064, 0.128, 0.256, 0.512, 1.024]; %HPC LOG Base
  %winRange = [.001 .002:.002:.03 .032:.005:.062 .128 .256 .512 1.024] %NoIN
  
 %% Run Script
@@ -54,14 +61,14 @@ winRange = [.001 .002 .004 .008 .016:.002:.064 .128 .256 .512 1.024]; %fine_log_
 % end
 
 %% making epochs
-% epochRun = zeros(1200,2);
-% numel(.001:2:2400)
-% count = 1;
-% for i = .001:2:2400
-%    epochRun(count,1) = i;
-%    epochRun(count,2) = epochRun(count,1)+1;
-%    count = count +1;
-% end
+epochRun = zeros(600,2);
+numel(.001:4:2400)
+count = 1;
+for i = .001:4:2400
+   epochRun(count,1) = i;
+   epochRun(count,2) = epochRun(count,1)+2;
+   count = count +1;
+end
 %% Set Graph Defaults Now
 SetGraphDefaults;
 
@@ -101,9 +108,20 @@ num_mat_files = [1 2 3 5 6];
 cd(path_mat_files)
 Concat_Sessions_OptHist(winRange, num_mat_files)
 
+%% Dot plot showing median window per session for all sessions
+folder_name1 = 'log_fine_16_64';
+folder_name2 = 'log_fine_quality_16_64';
+
+path_mat_files1 = ['C:\Users\rcbul\Documents\English Lab\PP_RSC_Data\matFilesOverall\' folder_name1];
+path_mat_files2 = ['C:\Users\rcbul\Documents\English Lab\PP_RSC_Data\matFilesOverall\' folder_name2];
+num_mat_files = [1 2 3 5 6];
+
+(winRange, path_mat_files1, path_mat_files2, num_mat_files)
+
+
 %% Histogram Comparing two datasets (blue vs red)
-optimal_win1 = 
-optimal_win2 = 
+optimal_win1 = optimal_win
+optimal_win2 = optimal_win(FR_above_5,1)
 winRange1 = winRange;
 winRange2 = winRange; 
 
