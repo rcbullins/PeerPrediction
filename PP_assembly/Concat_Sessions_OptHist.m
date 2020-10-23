@@ -39,7 +39,7 @@ function [] = Concat_Sessions_OptHist(winRange, num_mat_files)
     total_ct_per_win(1,icol) = sum(ct_per_win_mat(:,icol));
     end
 %% Graph
-    bar(1:length(winRange), total_ct_per_win, 'FaceColor', 'b', 'facealpha',.5, 'edgecolor', 'none');
+    bar(1:length(winRange), total_ct_per_win, 'FaceColor', 'r', 'facealpha',.5, 'edgecolor', 'none');
     hold on
 
     title({'Multiple Sessions';'Optimal Time Window Histogram'});
@@ -51,6 +51,6 @@ function [] = Concat_Sessions_OptHist(winRange, num_mat_files)
     
     optimal_win_tot = [optimal_win{1}(:,1); optimal_win{2}(:,1); optimal_win{3}(:,1)] %; optimal_win{4}(:,1)];
     med_opt1 = (['Median Window = ' num2str(median(optimal_win_tot)*1000)]);
-    text(.5, max(total_ct_per_win), med_opt1, 'Color', 'b');
+    text(.5, max(total_ct_per_win), med_opt1, 'Color', 'r');
 
 end
