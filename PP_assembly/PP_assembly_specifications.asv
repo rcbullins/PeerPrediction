@@ -38,7 +38,20 @@
     end
     total_time_min = total_time_run /60; %28min running out of baseline 40 min
  %% Find Epochs of not running
+ [noRunEpochs, noRunIdx] = getRunEpochs(vel_cm_s,dt,time)
  
+ epoch_sz = zeros(1, length(noRunEpochs))
+ for i = 1:length(noRunEpochs)
+     epoch_sz(1,i) = noRunEpochs(i,2) - noRunEpochs(i,1);
+     
+ end
+ 
+ epochNoRunOver72 = find(epoch_sz > 72)
+ epochRun_noRun = zeros(length(epochNoRunOver72),2);
+ for j = 1:length(epochNoRunOver72)
+ epochRun_noRun(j,1) = noRunEpochs(epochNoRunOver72(1,j),1)
+ epochRun_noRun(j,2) = noRunEpochs(epochNoRunOver72(1,j),1)
+ end
  
  
     

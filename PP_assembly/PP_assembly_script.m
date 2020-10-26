@@ -27,8 +27,8 @@
      %folder_name = '\Control_Epoch_4min\'
      %folder_name = '\Epoch_2000ms_20min\'
      %folder_name = '\Baseline_Moving_Epochs\' %hpc 155505
-     folder_name = '\Baseline_Moving_Epochs_Greater4s\'
-      %folder_name = '\Epoch_1000ms_4min_aligned\'
+     %folder_name = '\Baseline_Moving_Epochs_Greater4s\'
+      folder_name = '\Epoch_1000ms_4min_aligned\'
 %Define ResultPath that contains results from assembly function
     result_data_path = [data_path folder_name];
     % result_data_path = [basepath 'PP_RSC_Data\Testing\velocityAssemb']
