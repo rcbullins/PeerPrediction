@@ -47,7 +47,7 @@ k = imgaussfilt([std*10 1],[std 1]);
 fprintf('Launching Cross-validated Peer info\n')
 
 %-----reagan edit--------% 
-nbEp = size(epochRun,1);
+nbEp = size(epoch,1);
 %------------------------%
 
 nbC = length(spikes.times); %number of cells
