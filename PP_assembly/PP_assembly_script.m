@@ -17,6 +17,7 @@
 %Deine DataPath that contains list of session names;
     data_path = [basepath 'PP_RSC_Data\' session_name];
 % Define dataset to load/folder name
+     folder_name = '\Log_Baseline\'
      %folder_name = '\log_fine_16_64\';
      %folder_name = '\Assembly_binLog\'; %rsc
      %folder_name = '\Pulse_Epoch\';
@@ -27,8 +28,9 @@
      %folder_name = '\Control_Epoch_4min\'
      %folder_name = '\Epoch_2000ms_20min\'
      %folder_name = '\Baseline_Moving_Epochs\' %hpc 155505
-     folder_name = '\Baseline_Moving_Epochs_Greater4s\'
+     %folder_name = '\Baseline_Moving_Epochs_Greater4s\'
       %folder_name = '\Epoch_1000ms_4min_aligned\'
+     folder_name = '\Velocity_Data\singular_epoch_moving_42s\'
 %Define ResultPath that contains results from assembly function
     result_data_path = [data_path folder_name];
     % result_data_path = [basepath 'PP_RSC_Data\Testing\velocityAssemb']
@@ -127,9 +129,9 @@ winRange2 = winRange;
 
 PP_TimeWindow_Hist_Comp(optimal_win1, optimal_win2, winRange1, winRange2)
 %% Predictability graph for a target cell
-target_cell = 12;
+target_cell = 8;
 
-PredictabilityGraph_SingularCell(target_cell, winRange, optimal_win)
+PredictabilityGraph_SingularCell(target_cell, winRange, optimal_win, log_likelihood)
 %% Predictability plots for multiple dataset
 log_1 = log_likelihood;
 log_2 = 
