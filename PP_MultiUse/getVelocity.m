@@ -1,33 +1,59 @@
-function [vel_cm_s, time, dt] = getVelocity(analogin, params);
+function [vel_cm_s, time, dt] = getVelocity(analogin, params, basename);
 
 pos = analogin.pos;
 time = analogin.ts;
 
-% opts.downsampleFactor = 300;
-% pos = downsample(pos, opts.downsampleFactor);
+opts.downsampleFactor = 300;
+pos = downsample(pos, opts.downsampleFactor);
 % pos = movmean(pos,10); ;%nb hardcoded
-% time = downsample(time,opts.downsampleFactor);
+time = downsample(time,opts.downsampleFactor);
 
 pos_scaled = pos-min(pos);
 pos_in_cm =  pos_scaled*(params.circDisk)/max(pos_scaled);
 
 % additive positions (roll-out-the-wheel)
-allidx = find(abs(diff(pos_in_cm))>10); % nb thr = hardcoded
-for idx = 1:length(allidx)
+thr_diff = 10*std(pos)
+allidx = find(abs(diff(pos_in_cm))> thr_diff); 
     
-    if allidx(idx) < allidx(end-1)
-        pos_in_cm(allidx(idx)+1:allidx(idx+1)) = pos_in_cm(allidx(idx)+1:allidx(idx+1)) + pos_in_cm(allidx(idx));
-    else
-        pos_in_cm(allidx(idx)+1:end) = pos_in_cm(allidx(idx)+1:end)+ pos_in_cm(allidx(idx));
-    end
-end
-
-
-figure,subplot(3,1,1) ,plot(time,pos_in_cm)
+% If wheel goes positive to negative (FLIP PLOT) -- RB 11/13/20
+    if regexp(basename, 'mouse')
+        for idx = 1:length(allidx)
+            if allidx(idx) < allidx(end-1)
+                pos_in_cm(allidx(idx)+1:allidx(idx+1)) = pos_in_cm(allidx(idx)+1:allidx(idx+1)) - (pos_in_cm(allidx(idx)+1) - pos_in_cm(allidx(idx)));
+            else
+                pos_in_cm(allidx(idx)+1:end) = pos_in_cm(allidx(idx)+1:end) + (pos_in_cm(allidx(idx)+1) - pos_in_cm(allidx(idx)));
+            end
+        end
+       %have this constant decreasing graph - now need to flip it
+        %find the differences between each point
+        diff_pos_all = diff(pos_in_cm);
+        %multiply difference by -1 to flip slope
+        diff_pos_all = diff_pos_all * -1;
+        pos_in_cm_rev = zeros(1,length(pos_in_cm));
+        pos_in_cm_rev(1,1) = pos_in_cm(1,1); 
+        %add difference to each point, to get increasing graph
+        for idiff = 1:length(diff_pos_all)
+            pos_in_cm_rev(1,idiff+1) = pos_in_cm_rev(1,idiff) + diff_pos_all(1,idiff);
+        end
+        pos_in_cm = pos_in_cm_rev;
+    else %original code when wheel goes negative to positive
+        for idx = 1:length(allidx)
+            if allidx(idx) < allidx(end-1)
+                pos_in_cm(allidx(idx)+1:allidx(idx+1)) = pos_in_cm(allidx(idx)+1:allidx(idx+1)) + pos_in_cm(allidx(idx));
+            else
+                pos_in_cm(allidx(idx)+1:end) = pos_in_cm(allidx(idx)+1:end)+ pos_in_cm(allidx(idx));
+            end
+        end
+    end 
+figure
+subplot(4,1,1), plot(time, pos)
+xlim([0 4500])
+title('Raw')
+subplot(4,1,2) ,plot(time,pos_in_cm)
 xlim([0 4500])
 vel_cm = diff(pos_in_cm);
 title('cumulative pos')
-subplot(3,1,2),plot(time(2:end), vel_cm)
+subplot(4,1,3),plot(time(2:end), vel_cm)
 xlim([0 4500])
 title('vel_cm')
 
@@ -35,9 +61,9 @@ title('vel_cm')
 dt =time(2)-time(1);%1/30000; %of
 
 vel_cm_s = vel_cm/dt;
-vel_cm_s = movmean(vel_cm_s,1000000);
+vel_cm_s = movmean(vel_cm_s,10000); %1000000
 
-subplot(3,1,3),plot(time(2:end),vel_cm_s)
+subplot(4,1,4),plot(time(2:end),vel_cm_s)
 xlim([0 4500])
 title('vel_cm_s')
 

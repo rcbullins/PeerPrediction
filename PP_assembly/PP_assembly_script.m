@@ -17,7 +17,7 @@
 %Deine DataPath that contains list of session names;
     data_path = [basepath 'PP_RSC_Data\' session_name];
 % Define dataset to load/folder name
-     folder_name = '\Log_Baseline\'
+     %folder_name = '\Log_Baseline\'
      %folder_name = '\log_fine_16_64\';
      %folder_name = '\Assembly_binLog\'; %rsc
      %folder_name = '\Pulse_Epoch\';
@@ -30,7 +30,8 @@
      %folder_name = '\Baseline_Moving_Epochs\' %hpc 155505
      %folder_name = '\Baseline_Moving_Epochs_Greater4s\'
       %folder_name = '\Epoch_1000ms_4min_aligned\'
-     folder_name = '\Velocity_Data\singular_epoch_moving_42s\'
+     %folder_name = '\Velocity_Data\singular_epoch_moving_42s\'
+     folder_name = '\Movement_EpochCode_Test\'
 %Define ResultPath that contains results from assembly function
     result_data_path = [data_path folder_name];
     % result_data_path = [basepath 'PP_RSC_Data\Testing\velocityAssemb']
