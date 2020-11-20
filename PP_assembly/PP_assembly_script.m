@@ -31,7 +31,7 @@
      %folder_name = '\Baseline_Moving_Epochs_Greater4s\'
       %folder_name = '\Epoch_1000ms_4min_aligned\'
      %folder_name = '\Velocity_Data\singular_epoch_moving_42s\'
-     folder_name = '\Movement_EpochCode_Test\'
+     folder_name = '\Movement_5Greater\'
 %Define ResultPath that contains results from assembly function
     result_data_path = [data_path folder_name];
     % result_data_path = [basepath 'PP_RSC_Data\Testing\velocityAssemb']
@@ -168,7 +168,6 @@ bin_win_count = .05;
     load([session_name '.spikes.cellinfo.mat']);
 %now gives R distr
 [R_squared_values, R_values, mean_weight_values] = RSqr_FiringRate_Weights(spikes, weights, optimal_win, winRange, bin_win_count)
-
 
 %% Raster sorted by weight and colored by firing rate
     figure

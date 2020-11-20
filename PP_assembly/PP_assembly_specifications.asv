@@ -63,17 +63,17 @@
     
  %% Find Epochs of not running
 
- noRun = zeros(455,2)
- for i = 1:454
+ noRun = zeros(1191,2)
+ for i = 1:455
      noRun(i,1) = runEpochs(i,2)+.0001
      noRun(i,2) = runEpochs(i+1,1)-.0001
      
  end
  
- NR_epochLength = zeros(455,1)
+ epochLength = zeros(1191,1)
  
  for i = 1:159
-     NR_epochLength(i,1) = noRun(i,2)-noRun(i,1)
+     epochLength(i,1) = noRun(i,2)-noRun(i,1)
      
  end
  %% Firing Rate
@@ -92,7 +92,7 @@
  %% Get power spectrum
  channel = 57;
  %epoch = [1547.5 2143.4];
- epoch = [1208 1309] %136
+ epoch = runEpochs(32,:)
  cd(data_path)
  getPowerSpectrum(channel, epoch, session_name)
  
