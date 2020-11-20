@@ -40,42 +40,32 @@
      end
      % find epochs greater than 5 seconds
      time_thr = 5;
-     long_run_epochs_idx = find(length_run(:,1) >= time_thr)
-     runEpochs_long = runEpochs(long_run_epochs_idx,:);
+     runIdx_long = find(length_run(:,1) >= time_thr)
+     runEpochs_long = runEpochs(runIdx_long,:);
      % sanity check - correct epochs
      figure
      plot(time(2:end),vel_cm_s);
      xlim([0 4500]);
      title('vel_cm_s');
      hold on
-    %%
-    total_time_run = 0
-    for i = 1:159 %hard coded
-        int_row = runEpochs(i,2) - runEpochs(i,1);
-        total_time_run = total_time_run + int_row
-    end
-    total_time_min = total_time_run /60; %28min running out of baseline 40 min
-    
-    length_run = zeros(1120,1);
-    for i = 1:1120
-         length_run(i,1) = runEpochs(i,2)-runEpochs(i,1);
-    end
-    
  %% Find Epochs of not running
 
- noRun = zeros(455,2)
- for i = 1:454
-     noRun(i,1) = runEpochs(i,2)+.0001
-     noRun(i,2) = runEpochs(i+1,1)-.0001
+ noRunEpochs = zeros(length(runEpochs),2)
+ for i = 1:length(runEpochs)-1
+     noRunEpochs(i,1) = runEpochs(i,2)+.0001
+     noRunEpochs(i,2) = runEpochs(i+1,1)-.0001
      
  end
  
- NR_epochLength = zeros(455,1)
+ length_noRun = zeros(length(noRunEpochs),1)
  
- for i = 1:159
-     NR_epochLength(i,1) = noRun(i,2)-noRun(i,1)
-     
+ for i = 1:length(noRunEpochs)-1
+     length_noRun(i,1) = noRunEpochs(i,2)-noRunEpochs(i,1)
  end
+     time_thr = 5;
+     noRunIdx_long = find(length_noRun(:,1) >= time_thr)
+     noRunEpochs_long = noRunEpochs(noRunIdx_long,:);
+ 
  %% Firing Rate
  
  new_spikes = {};
@@ -90,10 +80,18 @@
         firing_rate(1,i) = num_spikes/length_time;
       end
  %% Get power spectrum
- channel = 57;
- %epoch = [1547.5 2143.4];
+ rippleChan = 57;
  epoch = [1208 1309] %136
  cd(data_path)
- getPowerSpectrum(channel, epoch, session_name)
+ getPowerSpectrum(rippleChan,epoch)
  
+ %% Power Spectrum run vs no run
+ rippleChan = 57;
+ cd(data_path)
+ getPowerSpectrum_Advanced(rippleChan, runEpochs_long, noRunEpochs_long)
+ 
+ %% Get wavespec
+ rippleChan = 57;
+ cd(data_path)
+ runWaveSpec(rippleChan, runEpochs_long, runIdx_long)
  

@@ -1,9 +1,6 @@
-basepath = cd; basename = bz_BasenameFromBasepath(cd);
-% rippleChan= 25;
-%rippleChan = 9;
-rippleChan = 57
+function [] = runWaveSpec(rippleChan, runEpochs_long, runIdx_long)
+
 lfp = bz_GetLFP(rippleChan);
-load([basename '_runEpochs1_5.mat'])
 
 selRunIdx = runIdx_long; % currently: min 2cm/s  (long is min 3s)
 selRunEpochs = runEpochs_long;

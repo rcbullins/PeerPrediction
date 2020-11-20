@@ -1,9 +1,10 @@
-function [] = getPowerSpectrum(channel, epoch, session_name)
+function [] = getPowerSpectrum(channel, epoch)
 
 %Purpose: To make a power spectrum graph based on given input epochs
 
 %Dependencies: Buzcode
 %              lfp mat file
+%              sessionInfo
 
 %Inputs: Channel for lfp
 %        epoch start stop times [start stop; start stop; start stop]
