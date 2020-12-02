@@ -72,3 +72,4 @@ lf.Color = [0,0,1,0.1]
 xlabel('Frequency Hz')  
 ylabel ('Power') 
 legend('No Movement','Movement')
+end

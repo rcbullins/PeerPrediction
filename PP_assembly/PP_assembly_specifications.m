@@ -30,7 +30,7 @@
     
  %% Find Epochs of running 
  %make .75
-    min_thresh = .75
+    min_thresh = 1
     [runEpochs, runIdx] = getRunEpochs(vel_cm_s, dt, time, min_thresh)
     
      %find how long each epoch last
@@ -91,7 +91,42 @@
  getPowerSpectrum_Advanced(rippleChan, runEpochs_long, noRunEpochs_long)
  
  %% Get wavespec
- rippleChan = 57;
+ if strcmpi(session_name,'u19_200310_135409')
+        opts.rippleChan = 9;
+    elseif strcmpi(session_name,'u19_200313_155505')
+        opts.rippleChan     = 57;
+    elseif strcmpi(session_name,'u19_200313_120452')
+        opts.rippleChan = 38;
+    elseif strcmpi(session_name,'u21_200305_153604')
+        opts.rippleChan = 5;
+ end
  cd(data_path)
- runWaveSpec(rippleChan, runEpochs_long, runIdx_long)
+ runWaveSpec(opts.rippleChan, runEpochs_long, runIdx_long)
+ %% Alt Get wavespec (have mat file of data structure)
+    time_lim = runEpochs_long(4,:) %seconds    
+    %Plot Velocity 
+    subplot(2,1,1)
+    t = time;
+    t_ds = downsample(t,10);
+    vel_ds = downsample(vel_cm_s, 10);
+    plot(t_ds, vel_ds)
+    xlim([800 2000])
+    
+    % Wavespec plot -- do NOT DOWNSAMP this, plot three run epochs over 7ish and
+    % then plot average  (interp1 ‘Nearest’)
+    cd(data_path)
+    load('wavespecall.mat'); %sampled at 1250 per second
+    subplot(2,1,2)
+    normdata = abs(ws_temp.data);
+    normdata_ds = downsample(normdata, 125); %10 samples per second
+    imagesc(normdata_ds');
+    set(gca,'YDir','normal');
+    colormap(jet)
+    xlabel('Time(s)');
+    ylabel('Frequency(Hz)');
+    xlim([time_lim(1)*10 time_lim(2)*10])
+    xlim([8000 20000])
+ %%
+ [SleepScoreMetrics,StatePlotMaterials] = ClusterStates_GetMetrics(basePath,SleepScoreLFP,EMG,overwrite,varargin)
+
  
