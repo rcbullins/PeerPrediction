@@ -67,7 +67,7 @@ toc
 %% EXTRA Specifications
   % Analyze all pairs or a subset?
         choice_analysisPairs = "All";
-         %choice_analysisPairs = [1:25];
+        %choice_analysisPairs = [1:25];
         %choice_analysisPairs = "WeakPairs";
         %choice_analysisPairs = "StrongPairs";
   % Graping (Deviance, Cross Corr, Rastor): Which pairs?
@@ -170,8 +170,6 @@ PP_OptimalWindow_ScatterPlot(min_win_pairs,dev_smoothed,devControl,y_plot_limit,
 cd(data_path)
 
 [spikeRates] = PP_dotplot_spikerate(binned_spikes);
-
-%% Place Field 
 
 
 %% Code for seeing cell specific involvement per bin size

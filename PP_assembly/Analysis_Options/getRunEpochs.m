@@ -1,12 +1,10 @@
-function [runEpochs, runIdx] = getRunEpochs(vel_cm_s, dt,time);
+function [runEpochs, runIdx] = getRunEpochs(vel_cm_s, dt,time, thr);
 %can add minRun as input - Reagan
 %something is going wrong, because runepochs do not span entire recording
 % check with Reagan! 
 
 % vel_cm_s from getVelocity
 % minRun in cm_s 
-
-thr = 10;% minRun/dt;
 
 % runBins = find(vel_cm_s > thr);
 % 

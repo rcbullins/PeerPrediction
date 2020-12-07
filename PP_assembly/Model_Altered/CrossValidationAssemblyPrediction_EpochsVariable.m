@@ -1,6 +1,10 @@
-function [L,weights] = CrossValidationAssemblyPrediction_Epochs(spikes,varargin)
+function [L,weights] = CrossValidationAssemblyPrediction_EpochsVariable(spikes,varargin)
 warning off
 %
+% Reagan edits - 10/26/20 
+% ONLY USE WHEN: Have multiple epochs to run over, and want each 
+%                cross validation fold to run over a different epoch.
+%                Will NOT cross validate a SINGLE epoch. Needs MULTIPLE.
 
 %  spikes = bz_code standard
 %  spikes = bz_GetSpikes('basepath',basepath);
@@ -36,16 +40,20 @@ cells = p.Results.cells;
 nbEp = p.Results.nbEp;
 
 
+
 %%
-%k = gaussian2Dfilter([std*10 1],[std 1]);
-k = imgaussfilt([std*10 1],[std 1]);
+k = gaussian2Dfilter([std*10 1],[std 1]); %original
+%k = imgaussfilt([std*10 1],[std 1]); 
 fprintf('Launching Cross-validated Peer info\n')
 
+%-----reagan edit--------% 
+% get actual number of epochs, before this was concatenated (original was 10)
+nbEp = size(epoch,1);
+%------------------------%
 
 nbC = length(spikes.times); %number of cells
 
 L = NaN(nbEp,nbC); %number cross validation folds by number of cells
-
 
 weights = nan(nbC+1,nbEp,nbC); %initializing matrix of weights
 
@@ -53,18 +61,35 @@ maxT = max(cellfun(@max,spikes.times))+dt; %finding max time
 
 ts = 0:dt:maxT; %binning time 
 
-[ts1] = Epoch2Mat(ts,epoch); %what ts are in the epoch given
-%-----------Reagan Editing Here ------------%
-%Taking out ' from original fixes it....?
+
+%-----------Reagan Editing Here ------------% 10/26/20
+[ts1_array] = Epoch2Mat(ts,epoch); %ts bins in dt increments per epoch (cell array)
+
     %ts1 = cell2mat(ts1'); %original Sams
-    ts1 = cell2mat(ts1); %gives consecutive timestamps for all epochs
+     ts1 = cell2mat(ts1_array); %gives consecutive timestamps for all epochs
+%     crossBins = floor(linspace(1,length(ts1),nbEp+1)); % original
+%     crix = [crossBins(1) crossBins(2);crossBins(2:end-1)'+1 crossBins(3:end)']; %splits timestamps equally
+    crix = zeros(numel(ts1_array),2) % crix splits the ts by index in ts1
+    idx_ct = 1;
+    
+    % define indices of timestamp bins for each epoch (crix)
+        % crix defines start and stop times (indices of all timestamps
+        % combined)
+   for iepoch = 1:numel(ts1_array)
+        crix(iepoch,1) = idx_ct;
+        idx_ct = idx_ct + length(ts1_array{iepoch}) - 1;
+        crix(iepoch,2) = idx_ct;
+        idx_ct = idx_ct + 1;
+   end
+    ts1 = ts1';
+
 %-------------------------------------------%
 
-crossBins = floor(linspace(1,length(ts1),nbEp+1)); %
-crix = [crossBins(1) crossBins(2);crossBins(2:end-1)'+1 crossBins(3:end)'];
+% for every epoch, cross-validate (the size can change of each epoch)
 for ii=1:nbEp %how many times it cross validates? nbEp = 10 folds?
     fprintf('.')
-    
+    %define timestamp indices for every epoch not in this epoch
+        %what we want to make the prediction on (so we can check it later)
     ep = crix(~ismember(crix,crix(ii,:),'rows'),:);
     
     bints = cellfun(@(a) ts1(a(1):a(2)),num2cell(ep,2),'uni',0);
@@ -75,10 +100,9 @@ for ii=1:nbEp %how many times it cross validates? nbEp = 10 folds?
     
     for jj = 1:nbC
         spk = cell2mat(Epoch2Mat(spikes.times{jj},ts1(ep)));
-        
+        % how many spikes occur in each bin
         pop(:,jj) = cell2mat(cellfun(@(a) histoc(spk,a),bints,'uni',0));
        % pop(:,jj) = cell2mat(cellfun(@(a) nanconvn(histoc(spk,a),k),bints,'uni',0));
-        
     end
     
     for kk = 1:nbC
@@ -118,7 +142,7 @@ for ii=1:nbEp %how many times it cross validates? nbEp = 10 folds?
             popt = nan(N,nbC);
              %  qpopt = nan(N,nbC);
             for jj = 1:nbC
-                 spk = cell2mat(Epoch2Mat(spikes.times{jj},ts1(ep)'));
+                 spk = cell2mat(Epoch2Mat(spikes.times{jj},ts1(ep))); % ts1(ep)'
               %  popt(:,jj) = nanconvn(histc(spk,bints),k);
                  popt(:,jj) = histc(spk,bints);
             end

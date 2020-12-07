@@ -42,8 +42,8 @@ cells = []
 nbEp = 10
 
 %%
-%k = gaussian2Dfilter([std*10 1],[std 1]);
-k = imgaussfilt([std*10 1],[std 1]);
+k = gaussian2Dfilter([std*10 1],[std 1]); %original
+%k = imgaussfilt([std*10 1],[std 1]);
 fprintf('Launching Cross-validated Peer info\n')
 
 
