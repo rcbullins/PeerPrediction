@@ -1,6 +1,6 @@
 %Peer prediction inputs script
 
-% % Purpose: Get .mat file containing informationoo needed for peer
+% % Purpose: Get .mat file containing information needed for peer
 %            prediction code
 
 % % Dependencies:StartUp_PeerPrediction

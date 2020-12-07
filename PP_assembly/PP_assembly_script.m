@@ -3,7 +3,7 @@
 
 %% Adding Paths
 
-%Add Basepath for all code and data used
+%Add Basepath for folder with code and data folders
     basepath = ('C:\Users\rcbul\Documents\English Lab\');
 %Define Recording Session Name
     %session_name = 'm115_191203_152410_n';
@@ -15,30 +15,17 @@
     %session_name = 'u26_200306_172032'; %NUM 6
     
 %Deine DataPath that contains list of session names;
-    data_path = [basepath 'PP_RSC_Data\' session_name];
+    data_path = [basepath 'PP_Data\' session_name];
 % Define dataset to load/folder name
      %folder_name = '\Log_Baseline\'
      %folder_name = '\log_fine_16_64\';
      %folder_name = '\Assembly_binLog\'; %rsc
-     %folder_name = '\Pulse_Epoch\';
-     %folder_name = '\Pulse_Epoch_Baseline\';
-     %folder_name = '\Epoch_Length_2000ms\'
-     %folder_name = '\Epoch_300ms_20min\'
-     %folder_name = '\Test_Epoch_Code\'
-     %folder_name = '\Control_Epoch_4min\'
-     %folder_name = '\Epoch_2000ms_20min\'
-     %folder_name = '\Baseline_Moving_Epochs\' %hpc 155505
-     %folder_name = '\Baseline_Moving_Epochs_Greater4s\'
-      %folder_name = '\Epoch_1000ms_4min_aligned\'
-     %folder_name = '\Velocity_Data\singular_epoch_moving_42s\'
-     folder_name = '\Movement_5Greater\'
 %Define ResultPath that contains results from assembly function
     result_data_path = [data_path folder_name];
     % result_data_path = [basepath 'PP_RSC_Data\Testing\velocityAssemb']
 %Add Paths
     addpath(genpath(result_data_path));
     addpath(genpath([basepath 'Code\']));
-    addpath(genpath([basepath 'Sam_Code\']));
     addpath(genpath([basepath 'buzcode-dev\']));
 %% Defining Specifications
 winRange = [.001 .002 .004 .008 .016:.002:.064 .128 .256 .512 1.024]; %fine_log_16_64
@@ -55,36 +42,13 @@ winRange = [.001 .002 .004 .008 .016:.002:.064 .128 .256 .512 1.024]; %fine_log_
 % end
 % toc
 
-% CrossValidationAssemblyPrediction_Epochs (to give epochs)
-
-% for ibin = 9
-%     [log_likelihood, weights, log_velocity] = CrossValidationAssemblyPrediction_ExtraPredict(spikes, velocities,'dt', winRange(ibin), 'epoch', [0 2400]);
-%     save([num2str(bin_list(ibin)) '_bn_asmb.mat'], 'log_likelihood', 'weights', 'log_velocity',  '-v7.3');
-%     clear log_likelihood weights log_velocity
-% end
-
-%% making epochs
-epochRun = zeros(600,2);
-numel(.001:4:2400)
-count = 1;
-for i = .001:4:2400
-   epochRun(count,1) = i;
-   epochRun(count,2) = epochRun(count,1)+2;
-   count = count +1;
-end
 %% Set Graph Defaults Now
 SetGraphDefaults;
 
 %% Concat Windows & Organize Data
-%NOTE: HARD CODED
 [log_likelihood, weights] = Concat_Assemb_Data(winRange, result_data_path);
 
-% Take Away zeros -- happens because some cells do not appear til later in
-% recording -CONSIDER how this could effect other graphs
-%log_likelihood = log_likelihood(any(log_likelihood,2),:);
-
 %% Find optimal window for every cell
-
 [optimal_win, highest_log_value] = Find_Optimal_Window_Assemb(log_likelihood, winRange);
 
 %% Concat EXTRA PREDICTOR
@@ -92,13 +56,12 @@ SetGraphDefaults;
 [log_velocity] = Concat_Assemb_ExtraPredic(winRange, result_data_path);
 
 %% Find optimal window using EXTRA PREDICTOR
-
 [optimal_win_ex, highest_log_value_ex] = Find_Optimal_Window_Assemb(log_velocity, winRange);
 
 %% Histogram of Optimal Time Windows for a singular session
 winRange_graph = winRange *1000; %make in ms
 optimal_win_graph = optimal_win *1000; %make s to ms
-%make sure axis is good for winRange-may need to alter
+%NOTE: make sure axis is good for winRange-may need to alter
 [optimal_window] = PP_TimeWindow_Histogram(winRange_graph, optimal_win_graph, session_name); 
 
 %% Histogram of Optimal Time Windows for all Sessions (specified sessions)
@@ -120,7 +83,6 @@ path_mat_files2 = ['C:\Users\rcbul\Documents\English Lab\PP_RSC_Data\matFilesOve
 num_mat_files = [1 2 3 5 6];
 
 (winRange, path_mat_files1, path_mat_files2, num_mat_files)
-
 
 %% Histogram Comparing two datasets (blue vs red)
 optimal_win1 = optimal_win
